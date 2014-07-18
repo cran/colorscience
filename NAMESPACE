@@ -1,0 +1,5 @@
+exportPattern("^[[:alpha:]]+")
+importFrom(Hmisc, approxExtrap)
+importFrom(munsellinterpol, MunsellHVC)
+importFrom(pracma, interp1, trapz, circshift)
+
