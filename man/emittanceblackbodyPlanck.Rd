@@ -1,8 +1,8 @@
 \name{emittanceblackbodyPlanck}
 \alias{emittanceblackbodyPlanck}
 \title{emittance of a black body of temperature T at a given wavelength}
-\description{\code{emittanceblackbodyPlanck} emittance of a black body of temperature T at a given wavelength (in metres).
-}
+\description{\code{emittanceblackbodyPlanck} emittance of a black body of 
+temperature T at a given wavelength (in metres).}
 \usage{emittanceblackbodyPlanck(wlnm, T) }
 \arguments{
   \item{wlnm}{ wavelength in nm}
@@ -13,11 +13,11 @@
 }
 \source{
 Planck's radiation law
-\url{http://www.fourmich/documents/specrend/specrend.c}
+\url{https://en.wikipedia.org/wiki/Planck\%27s_law}
 }
 \references{
 Planck's radiation law
-\url{http://www.fourmich/documents/specrend/specrend.c}
+\url{https://en.wikipedia.org/wiki/Planck\%27s_law}
 }
 \author{Jose Gama}
 \examples{

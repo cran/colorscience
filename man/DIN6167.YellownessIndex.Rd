@@ -5,7 +5,7 @@
 in the industry for D65 for 2 or 10 deg observer.
 }
 \usage{DIN6167.YellownessIndex(XYZmatrix, illuminant = "C", observer = 2, RefWhite
-                 = XYZperfectreflectingdiffuser)}
+                 = colorscience::XYZperfectreflectingdiffuser)}
 \arguments{
     \item{XYZmatrix}{ CIE values for illuminant C}
     \item{illuminant}{ illuminant}

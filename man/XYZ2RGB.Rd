@@ -4,22 +4,23 @@
 \description{\code{XYZ2RGB} convert from XYZ coordinates to CIE RGB coordinates.
 }
 \usage{XYZ2RGB(XYZmatrix, illuminant = "D65", observer = 2, RefWhite
-                 = XYZperfectreflectingdiffuser, RGBModel = "sRGB",
-                 RefWhiteRGB = whitepointsRGB, gamma = NA,
-                 RefWhiteIllum = XYZperfectreflectingdiffuser, CAT =
-                 "Bradford", CATarray = ChromaticAdaptation) }
+                 = colorscience::XYZperfectreflectingdiffuser, RGBModel = "sRGB",
+                 RefWhiteRGB = colorscience::whitepointsRGB, gamma = NA,
+                 RefWhiteIllum = colorscience::XYZperfectreflectingdiffuser, CAT =
+                 "Bradford", CATarray = colorscience::ChromaticAdaptation) }
 \arguments{
   \item{XYZmatrix}{ XYZ coordinates}
   \item{illuminant}{ illuminant}
   \item{observer}{ observer}
   \item{RefWhite}{ Reference White}
-  \item{RGBModel}{ RGB model}
-  \item{RefWhiteRGB}{ Reference White point RGB}
-  \item{gamma}{ gamma}
-  \item{RefWhiteIllum}{ Reference White illuminant}
-  \item{CAT}{ CAT method}
-  \item{CATarray}{ Chromatic Adaptation}
+  \item{RGBModel}{RGB model}
+  \item{RefWhiteRGB}{white points for RGB model}
+  \item{gamma}{gamma}
+  \item{RefWhiteIllum}{Reference perfect reflecting diffuser}
+  \item{CAT}{CAT}
+  \item{CATarray}{Chromatic Adaptation}
 }
+
 \value{
   CIE RGB coordinates
 }

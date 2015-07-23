@@ -4,7 +4,8 @@
 \description{\code{spectra2ISObrightness} Diffuse blue reflectance factor 
 (ISO brightness), R457,  ISO 2470.
 }
-\usage{spectra2ISObrightness(spectraIn=NA, wlIn=NA, RSDmatrix=ISObrightnessReflectometerRSD) }
+\usage{spectra2ISObrightness(spectraIn=NA, wlIn=NA, 
+RSDmatrix=colorscience::ISObrightnessReflectometerRSD) }
 \arguments{
   \item{spectraIn}{ spectral data}
   \item{wlIn}{ wavelength range}

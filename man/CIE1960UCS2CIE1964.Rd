@@ -5,7 +5,7 @@
 to CIE 1964 color space.
 }
 \usage{CIE1960UCS2CIE1964(uvYmatrix, illuminant = "D65", observer = 2, RefWhite =
-                 XYZperfectreflectingdiffuser) }
+                 colorscience::XYZperfectreflectingdiffuser) }
 \arguments{
   \item{uvYmatrix}{ uvY data}
   \item{illuminant}{ illuminant}

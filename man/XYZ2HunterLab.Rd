@@ -5,7 +5,7 @@
 to Hunter Lab coordinates.
 }
 \usage{XYZ2HunterLab(XYZmatrix,illuminant='D65',observer=2,
-RefWhite=XYZperfectreflectingdiffuser) }
+RefWhite=colorscience::XYZperfectreflectingdiffuser) }
 \arguments{
   \item{XYZmatrix}{ XYZ coordinates}
   \item{illuminant}{ illuminant}

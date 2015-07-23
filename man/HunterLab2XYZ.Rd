@@ -4,7 +4,7 @@
 \description{\code{HunterLab2XYZ} Converts HunterLab coordinates to XYZ.
 }
 \usage{HunterLab2XYZ(HunterLabmatrix, illuminant = "D65", observer = 2,
-                 RefWhite = XYZperfectreflectingdiffuser) }
+                 RefWhite = colorscience::XYZperfectreflectingdiffuser) }
 \arguments{
   \item{HunterLabmatrix}{ HunterLab coordinates}
   \item{illuminant}{ illuminant}

@@ -4,7 +4,7 @@
 \description{\code{DominantWavelength} Converts CMY coordinates to CMYK.
 }
 \usage{DominantWavelength(xyYmatrix, illuminant='D65',observer=2,
-RefWhiteIllum=XYZperfectreflectingdiffuser) }
+RefWhiteIllum=colorscience::XYZperfectreflectingdiffuser) }
 \arguments{
   \item{xyYmatrix}{ xyY matrix}
   \item{illuminant}{ illuminant}
@@ -16,11 +16,11 @@ RefWhiteIllum=XYZperfectreflectingdiffuser) }
 }
 \source{
 Bruce Justin Lindbloom, 2013 
-\url{http:#www.brucelindbloom.com/index.html?ColorCalculator.html}
+\url{www.brucelindbloom.com/index.html?ColorCalculator.html}
 }
 \references{
 Bruce Justin Lindbloom, 2013 
-\url{http:#www.brucelindbloom.com/index.html?ColorCalculator.html}
+\url{www.brucelindbloom.com/index.html?ColorCalculator.html}
 }
 \author{Jose Gama}
 \examples{

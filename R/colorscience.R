@@ -1,18 +1,494 @@
-# Correlated Color Temperature methods: McCamy, Hernandez-Andres et al. and Robertson.
 
+# David H. Brainard
+# Cone Contrast and Opponent Modulation Color Spaces
+# pp. 563
+# PART IV: CONE CONTRAST AND
+# OPPONENT MODULATION COLOR SPACES
+# DKL Example
+# 7/6/95 dhb Wrote it.
+# September 2014 Jose Gama converted the code to R
+LMS2DKL<-function(bg,diffcone.coords,DKL2LMS=FALSE){
+# bg= the background vector for the conversion
+# diffcone.coords = the vector we wish to convert
+# STEP 1, 2: GET bg and diffcone.coords
+# STEP 3: Set M.raw as in equation A.4.9.
+# This is found by inserting the background
+# values into equation A.4.8. Different
+# backgrounds produce different matrices.
+# The MATLAB notation below just
+# fills the desired 3-by-3 matrix.
+M.raw <- matrix(c(1,1,0,1,-bg[1]/bg[2],0,-1,-1,(bg[1]+bg[2])/bg[3]),3,3,byrow=TRUE)
+# STEP 4: Compute the inverse of M for
+# equation A.4.10. The MATLAB inv() function
+# computes the matrix inverse of its argument.
+M.raw.inv <- solve(M.raw)
+# STEP 5: Find the three isolating stimuli as
+# the columns of M.inv.raw. The MATLAB
+# notation X[,i] extracts the i-th column
+# of the matrix X.
+isochrom.raw <- M.raw.inv[,1]
+rgisolum.raw <- M.raw.inv[,2]
+sisolum.raw <- M.raw.inv[,3]
+# STEP 6: Find the pooled cone contrast of each
+# of these. The MATLAB norm() function returns
+# the vector length of its argument. The MATLAB
+# / operation represents entry-by-entry division.
+isochrom.raw.pooled <- norm(isochrom.raw / bg,'f')
+rgisolum.raw.pooled <- norm(rgisolum.raw / bg,'f')
+sisolum.raw.pooled <- norm(sisolum.raw / bg,'f')
+# STEP 7: Scale each mechanism isolating
+# modulation by its pooled contrast to obtain
+# mechanism isolating modulations that have
+# unit length.
+isochrom.unit <-  matrix(isochrom.raw/ isochrom.raw.pooled)
+rgisolum.unit <-  matrix(rgisolum.raw/ rgisolum.raw.pooled)
+sisolum.unit <- matrix(sisolum.raw / sisolum.raw.pooled)
+# STEP 8: Compute the values of the normalizing
+# constants by plugging t~e unit isolating stimuli
+# into A.4.9 and seeing what we get. Each vector
+# should have only one non-zero entry. The size
+# of the entry is the response of the unscaled
+# mechanism to the stimulus that should give unit
+# response.
+lum.resp.raw <- M.raw %*% isochrom.unit
+l.minus.m.resp.raw <- M.raw %*% rgisolum.unit
+s.minus.lum.resp.raw <- M.raw %*% sisolum.unit
+# STEP 9: We need to rescale the rows of M.raw
+# so that we get unit response. This means
+# mUltiplying each row of M.raw by a constant.
+# The easiest way to accomplish the multiplication
+# is to form a diagonal matrix with the desired
+# scalars on the diagonal. These scalars are just
+# the multiplicative inverses of the non-zero
+# entries of the vectors obtained in the previous
+# step. The resulting matrix M provides the
+# entries of A.4.11. The three .resp vectors
+# computed should be the three unit vectors
+# (and they are).
+D.rescale <- matrix(c(1/lum.resp.raw[1],0,0,0,1/l.minus.m.resp.raw[2],0,0,0,1/s.minus.lum.resp.raw[3]),3,3,byrow=TRUE)
+M <- D.rescale %*% M.raw
+lum.resp <- M %*% isochrom.unit
+l.minus.m.resp <- M %*% rgisolum.unit
+s.minus.lum.resp <- M %*% sisolum.unit
+# STEP 10: Compute the inverse of M to obtain
+# the matrix in equation A.4.12.
+if (!DKL2LMS) {
+M.inv <- solve(M)
+M<-M.inv
+}
+# STEP 11: Multiply the vector we wish to
+# convert byM to obtain its DKL coordinates.
+DKL.coords <- M %*% diffcone.coords
+# STEP 12: convert to spherical coordinates.
+# According to the conventions in the original DKL
+# paper, azimuth of 0 is along our rgisolum axis,
+# azimuth of 90 is along our negative sisolum
+# axis. The isochromatic axis has an elevation
+# of 90 degrees. To do the conversion. we flip the
+# sign of the sisolum coordinate and then do a
+# standard conversion to polar coordinates .
+RADS.TO.DEGS <- 360/(2*pi)
+azimuth.rads <- atan(pracma::mrdivide(-DKL.coords[3], DKL.coords[2]))
+isolum.len <- sqrt(DKL.coords[2]^2 + DKL.coords[3]^2)
+elevation.rads <- atan(pracma::mrdivide(DKL.coords[1], isolum.len))
+azimuth <- RADS.TO.DEGS %*% azimuth.rads
+elevation <- RADS.TO.DEGS %*% elevation.rads
+list(azimuth.rads=azimuth.rads,isolum.len=isolum.len,elevation.rads=elevation.rads,azimuth=azimuth,elevation=elevation)
+}
 
-# @book{kang2006computational,
-#   title={Computational color technology},
-#   author={Kang, Henry R},
-#   year={2006},
-#   publisher={Spie Press Bellingham}
+XYZtoRGB<-function(xc,yc,zc, ColorSystem=c(0.67,0.33,0.21,0.71,0.14,0.08,0.310,0.316)){
+# simplified XYZ to RGB conversion, mostly for plots
+xr <- ColorSystem[1]
+yr <- ColorSystem[2]
+zr <- 1.0 - xr - yr
+xg <- ColorSystem[3]
+yg <- ColorSystem[4]
+zg <- 1.0 - xg - yg
+xb <- ColorSystem[5]
+yb <- ColorSystem[6]
+zb <- 1.0 - xb - yb
+d <- xr*yg*zb - xg*yr*zb - xr*yb*zg + xb*yr*zg + xg*yb*zr - xb*yg*zr
+R <- (-xg*yc*zb + xc*yg*zb + xg*yb*zc - xb*yg*zc - xc*yb*zg + xb*yc*zg) / d
+G <- ( xr*yc*zb - xc*yr*zb - xr*yb*zc + xb*yr*zc + xc*yb*zr - xb*yc*zr) / d
+B <- ( xr*yg*zc - xg*yr*zc - xr*yc*zg + xc*yr*zg + xg*yc*zr - xc*yg*zr) / d
+cbind(R,G,B)
+}
+
+chromaticity.diagram<-function(chromaticityCoordinates=colorscience::cccie31, conversionFunction=NULL,...){
+# plot the chromaticity diagram AKA "horse shoe"
+# conversionFunction CIE1931XYZ2CIE1976uv
+pLen<-length(chromaticityCoordinates[["wlnm"]])
+n=seq(1,pLen,by=1)
+x<-chromaticityCoordinates$x[n]
+y<-chromaticityCoordinates$y[n]
+if (!is.null(conversionFunction)) if (is.function(conversionFunction)) {
+z<-conversionFunction(cbind(chromaticityCoordinates$x[n],chromaticityCoordinates$y[n],chromaticityCoordinates$z[n]))
+x<-z[,1]
+y<-z[,2]
+}
+dots <-  list(...)
+nameDots<-names(dots)
+lNameDot<-length(dots)>0
+if (!lNameDot) dots <- modifyList(dots, list(x=x,y=y,type='l')) else dots <- modifyList(dots, list(x=x,y=y ))
+if (!(any(nameDots=='xlab'))) dots <- modifyList(dots, list(xlab='x'))
+if (!(any(nameDots=='ylab'))) dots <- modifyList(dots, list(ylab='y'))
+if (!(any(nameDots=='type'))) dots <- modifyList(dots, list(type='l'))
+do.call(plot, dots ) # horseshoe
+segments(x[1],y[1],x[pLen],y[pLen]) # line
+}
+
+Maxwell.triangle<-function(primariesRGB=colorscience::whitepointsRGB, conversionFunction=NULL,...){
+# plot the Maxwell triangle
+# conversionFunction CIE1931XYZ2CIE1976uv
+x<-as.numeric(primariesRGB[1,c('xRed','xGreen','xBlue')])
+y<-as.numeric(primariesRGB[1,c('yRed','yGreen','yBlue')])
+if (!is.null(conversionFunction)) if (is.function(conversionFunction)) {
+z<-1-x-y
+z<-conversionFunction(cbind(x,y,z))
+x<-z[,1]
+y<-z[,2]
+}
+dots <- list(...)
+nameDots<-names(dots)
+lNameDot<-length(dots)>0
+if (!lNameDot) dots <- modifyList(dots, list(x=c(x,x[1]),y=c(y,y[1]),type='l')) else dots <- modifyList(dots, list(x=c(x,x[1]),y=c(y,y[1])))
+if (!(any(nameDots=='xlab'))) dots <- modifyList(dots, list(xlab='x'))
+if (!(any(nameDots=='ylab'))) dots <- modifyList(dots, list(ylab='y'))
+if (!(any(nameDots=='type'))) dots <- modifyList(dots, list(type='l'))
+do.call(plot, dots )
+}
+
+chromaticity.diagram.color<-function(chromaticityCoordinates=colorscience::cccie31, conversionFunction=NULL,granularity=10,...){
+# plot the chromaticity diagram AKA "horse shoe"
+# conversionFunction CIE1931XYZ2CIE1976uv
+pLen<-length(chromaticityCoordinates[["wlnm"]])
+n=seq(1,pLen,by=1)
+wlnmVector<-seq(chromaticityCoordinates[1,"wlnm"],chromaticityCoordinates[pLen,"wlnm",],by=1/granularity)
+pLen2<-length(wlnmVector)
+XYZ<-matrix(unlist(wlnm2xyz(wlnmVector)),ncol=3,byrow=FALSE)
+x<-XYZ[,1]
+y<-XYZ[,2]
+z<-XYZ[,3]
+X<-x
+Y<-y
+Z<-z
+if (!is.null(conversionFunction)) if (is.function(conversionFunction)) {
+az<-conversionFunction(cbind(x,y,z))
+x<-az[,1]
+y<-az[,2]
+z<-1-x-y
+}
+temp<-XYZtoRGB(X,Y,Z)/255
+t1<-temp/max(temp)*255
+t1<-round(t1)
+t1[which(t1<0)]<-0
+t2<-apply(t1,1,function(x) sprintf("#%02X%02X%02X",x[1],x[2],x[3]))
+dots <- list(...)
+nameDots<-names(dots)
+lNameDot<-length(dots)>0
+if (!lNameDot) dots <- modifyList(dots, list(x=x,y=y,type='p')) else dots <- modifyList(dots, list(x=x,y=y))
+if (!(any(nameDots=='xlab'))) dots <- modifyList(dots, list(xlab='x'))
+if (!(any(nameDots=='ylab'))) dots <- modifyList(dots, list(ylab='y'))
+if (!(any(nameDots=='xlim'))) dots <- modifyList(dots, list(xlim=0:1))
+if (!(any(nameDots=='ylim'))) dots <- modifyList(dots, list(ylim=0:1))
+if (!(any(nameDots=='col'))) dots <- modifyList(dots, list(col=t2))
+if (!(any(nameDots=='pch'))) dots <- modifyList(dots, list(pch=20))
+if (!(any(nameDots=='type'))) dots <- modifyList(dots, list(type='p'))
+do.call(plot, dots );par(new=TRUE)
+#line
+x1<-seq(x[1],x[pLen2],length.out=pLen2/7)#
+y1<-seq(y[1],y[pLen2],length.out=pLen2/7)#
+X1<-seq(X[1],X[pLen2],length.out=pLen2/7)#
+Y1<-seq(Y[1],Y[pLen2],length.out=pLen2/7)#
+temp<-XYZtoRGB(X1,Y1,1-X1-Y1)/255
+t1<-temp/max(temp)*255
+t1<-round(t1)
+t1[which(t1<0)]<-0
+t2<-apply(t1,1,function(x) sprintf("#%02X%02X%02X",x[1],x[2],x[3]))
+dots <- modifyList(dots, list(x=x1))
+dots <- modifyList(dots, list(y=y1))
+dots <- modifyList(dots, list(col=t2))
+do.call(plot, dots )
+}
+
+Maxwell.triangle.color<-function(primariesRGB=colorscience::whitepointsRGB, conversionFunction=NULL,granularity=10,...){
+# Maxwell triangle
+# conversionFunction CIE1931XYZ2CIE1976uv
+pLen<-100
+n=seq(1,pLen,by=1)
+x<-as.numeric(primariesRGB[1,c('xRed','xGreen','xBlue')])
+y<-as.numeric(primariesRGB[1,c('yRed','yGreen','yBlue')])
+x1<-seq(x[1],x[2],length.out=pLen)
+y1<-seq(y[1],y[2],length.out=pLen)
+x2<-seq(x[1],x[3],length.out=pLen)
+y2<-seq(y[1],y[3],length.out=pLen)
+x3<-seq(x[2],x[3],length.out=pLen)
+y3<-seq(y[2],y[3],length.out=pLen)
+x<-c(x1,x2,x3)
+y<-c(y1,y2,y3)
+z<-1-x-y
+X<-x
+Y<-y
+Z<-z
+if (!is.null(conversionFunction)) if (is.function(conversionFunction)) {
+z<-conversionFunction(cbind(x,y,z))
+x<-z[,1]
+y<-z[,2]
+}
+temp<-XYZtoRGB(X,Y,Z)/255
+t1<-temp/max(temp)*255
+t1<-round(t1)
+t1[which(t1<0)]<-0
+t2<-apply(t1,1,function(x) sprintf("#%02X%02X%02X",x[1],x[2],x[3]))
+dots <- list(...)
+nameDots<-names(dots)
+lNameDot<-length(dots)>0
+if (!lNameDot) dots <- modifyList(dots, list(x=x,y=y,type='p')) else dots <- modifyList(dots, list(x=x,y=y))
+if (!(any(nameDots=='xlab'))) dots <- modifyList(dots, list(xlab='x'))
+if (!(any(nameDots=='ylab'))) dots <- modifyList(dots, list(ylab='y'))
+if (!(any(nameDots=='xlim'))) dots <- modifyList(dots, list(xlim=0:1))
+if (!(any(nameDots=='ylim'))) dots <- modifyList(dots, list(ylim=0:1))
+if (!(any(nameDots=='col'))) dots <- modifyList(dots, list(col=t2))
+if (!(any(nameDots=='pch'))) dots <- modifyList(dots, list(pch=20))
+if (!(any(nameDots=='type'))) dots <- modifyList(dots, list(type='p'))
+do.call(plot, dots)
+}
+
+Maxwell.triangle.color.fill<-function(chromaticityCoordinates=colorscience::cccie31, conversionFunction=NULL,granularity=10,...){
+# plot the Maxwell triangle
+# conversionFunction CIE1931XYZ2CIE1976uv
+pLen<-length(chromaticityCoordinates[["wlnm"]])
+n=seq(1,pLen,by=1)
+wlnmVector<-seq(chromaticityCoordinates[1,"wlnm"],chromaticityCoordinates[pLen,"wlnm",],by=1/granularity)
+pLen2<-length(wlnmVector)
+XYZ<-matrix(unlist(wlnm2xyz(wlnmVector)),ncol=3,byrow=FALSE)
+x<-XYZ[,1]
+y<-XYZ[,2]
+z<-XYZ[,3]
+X<-x
+Y<-y
+Z<-z
+if (!is.null(conversionFunction)) if (is.function(conversionFunction)) {
+az<-conversionFunction(cbind(x,y,z))
+x<-az[,1]
+y<-az[,2]
+}
+maxx<-max(x)
+maxy<-max(y)
+minx<-min(x)
+miny<-min(y)
+pLen2<-10*granularity;k=1
+mx<-seq(minx,maxx, length.out=pLen2)
+my<-seq(miny,maxy, length.out=pLen2)
+p2<-matrix(0,pLen2^2,2)
+p3<-vector(mode='character',pLen2^2)
+for (n in 1:pLen2)# triangle
+for (m in 1:pLen2){
+   XC=mx[m]
+   YC=my[n]
+   ZC=1-XC-YC
+   if (!is.null(conversionFunction)) if (is.function(conversionFunction)) {
+az<-conversionFunction(cbind(XC,YC,ZC))
+XC<-az[,1]
+YC<-az[,2]
+ZC=1-XC-YC
+}
+   temp<-XYZtoRGB(mx[m],my[n],1-mx[m]-my[n])/255
+t1<-temp/max(temp)*255
+t1<-round(t1)
+if (any(t1<0)) t2<-NA else t2<-apply(t1,1,function(x) sprintf("#%02X%02X%02X",x[1],x[2],x[3]))
+   p2[k,1]<- XC
+   p2[k,2]<- YC
+   p3[k]<- t2
+   k<-k+1
+}
+dots <- list(...)
+nameDots<-names(dots)
+lNameDot<-length(dots)>0
+if (!lNameDot) dots <- modifyList(dots, list(x=p2[,1],y=p2[,2],col=p3,type='p')) else dots <- modifyList(dots, list(x=p2[,1],y=p2[,2],col=p3))
+if (!(any(nameDots=='xlab'))) dots <- modifyList(dots, list(xlab='x'))
+if (!(any(nameDots=='ylab'))) dots <- modifyList(dots, list(ylab='y'))
+if (!(any(nameDots=='xlim'))) dots <- modifyList(dots, list(xlim=0:1))
+if (!(any(nameDots=='ylim'))) dots <- modifyList(dots, list(ylim=0:1))
+if (!(any(nameDots=='col'))) dots <- modifyList(dots, list(col=p3))
+if (!(any(nameDots=='pch'))) dots <- modifyList(dots, list(pch=15))
+if (!(any(nameDots=='type'))) dots <- modifyList(dots, list(type='p'))
+do.call(plot, dots );par(new=TRUE)
+}
+
+chromaticity.diagram.color.fill<-function(chromaticityCoordinates=colorscience::cccie31, conversionFunction=NULL,granularity=10, conversionFunctionInv=NULL,...){
+# plot the chromaticity diagram AKA "horse shoe"
+# conversionFunction CIE1931XYZ2CIE1976uv
+pLen<-length(chromaticityCoordinates[["wlnm"]])
+#n=seq(1,pLen,by=1)
+wlnmVector<-seq(chromaticityCoordinates[1,"wlnm"],chromaticityCoordinates[pLen,"wlnm",],by=1/granularity)
+pLen2<-length(wlnmVector)
+XYZ<-matrix(unlist(wlnm2xyz(wlnmVector)),ncol=3,byrow=FALSE)
+x<-XYZ[,1]
+y<-XYZ[,2]
+z<-XYZ[,3]
+X<-x
+Y<-y
+Z<-z
+if (is.function(conversionFunction)) {
+if (!is.function(conversionFunctionInv)){
+mystrfun<-as.character(substitute(conversionFunction))
+if (mystrfun=='CIE1931xy2CIE1976uv') conversionFunctionInv<-colorscience::CIE1976uv2CIE1931xy
+if (mystrfun=='CIE1931xy2CIE1960uv') conversionFunctionInv<-colorscience::CIE1960UCS2xy # CIE1960uv2CIE1931xy
+if (mystrfun=='CIE1976uv2CIE1931xy') conversionFunctionInv<-colorscience::CIE1931xy2CIE1976uv
+if (mystrfun=='CIE1960uv2CIE1931xy') conversionFunctionInv<-colorscience::CIE1931xy2CIE1960uv
+}
+az<-conversionFunction(cbind(x,y,z))
+x<-az[,1]
+y<-az[,2]
+}
+boundariesXY<-cbind(x,y)
+#line
+#x1<-seq(x[1],x[length(x)],length.out=pLen2)
+#y1<-seq(y[1],y[length(y)],length.out=pLen2)
+#limits
+maxx<-max(X)
+maxy<-max(Y)
+minx<-min(X)
+miny<-min(Y)
+pLen2<-10*granularity;k=1
+dots <- list(...)
+nameDots<-names(dots)
+lNameDot<-length(dots)>0
+boolDots<-FALSE
+if ((any(nameDots=='xlim'))) { minx<-dots$xlim[1]
+maxx<-dots$xlim[2]
+boolDots<-TRUE
+}
+if ((any(nameDots=='ylim'))) { miny<-dots$ylim[1]
+maxy<-dots$ylim[2]
+boolDots<-TRUE
+}
+containedInTheHorseShoe<-FALSE
+if (boolDots){
+if (is.function(conversionFunctionInv)){
+minx<-conversionFunctionInv(c(minx, miny))[1]
+maxx<-conversionFunctionInv(c(maxx, maxy))[1]
+miny<-conversionFunctionInv(c(minx, miny))[2]
+maxy<-conversionFunctionInv(c(maxx, maxy))[2]
+}
+# are xlim, ylim contained in the horse shoe?
+if (all(point.in.polygon(c(minx, maxx, maxx, minx),c(miny, maxy, miny, maxy),boundariesXY[,1],boundariesXY[,2]))) containedInTheHorseShoe<-TRUE
+else { # 
+maxx<-max(X)
+maxy<-max(Y)
+minx<-min(X)
+miny<-min(Y)
+}
+}
+mx<-seq(minx,maxx, length.out=pLen2)
+pLen3<-round(pLen2 /( (maxx-minx)/(maxy-miny) ))
+my<-seq(miny,maxy, length.out=pLen3)
+# p2<-matrix(0,pLen2*pLen3,2)
+# p3<-vector(mode='character',pLen2*pLen3)
+# for (n in 1:pLen3)# Horse Shoe
+# for (m in 1:pLen2){
+#    XC=mx[m]
+#    YC=my[n]
+#    ZC=1-XC-YC
+#    if (!is.null(conversionFunction)) if (is.function(conversionFunction)) {
+# az<-conversionFunction(cbind(XC,YC,ZC))
+# XC<-az[,1]
+# YC<-az[,2]
+# ZC=1-XC-YC
 # }
+# temp<-XYZtoRGB(mx[m],my[n],1-mx[m]-my[n])/255
+# t1<-temp/max(temp)*255
+# t1<-round(t1)
+# 
+# #boundariesXY<-rbind(boundariesXY,cbind(x1,y1))
+# #boundariesXY<-rbind(boundariesXY,boundariesXY[1,])
+# if (any(t1<0)) t1[which(t1<0)]<-1
+# #if (!in.out(boundariesXY,cbind(XC,YC))) t2<-NA else t2<-apply(t1,1,function(x) sprintf("#%02X%02X%02X",x[1],x[2],x[3]))
+# #if (!pnt.in.poly(cbind(XC,YC),boundariesXY)) t2<-NA else t2<-apply(t1,1,function(x) sprintf("#%02X%02X%02X",x[1],x[2],x[3]))
+# 
+# if (containedInTheHorseShoe) {
+# t2<-apply(t1,1,function(x) sprintf("#%02X%02X%02X",x[1],x[2],x[3]))
+# } else {
+# if (!point.in.polygon(XC,YC,boundariesXY[,1],boundariesXY[,2])) t2<-NA else t2<-apply(t1,1,function(x) sprintf("#%02X%02X%02X",x[1],x[2],x[3]))
+# }
+# 
+#    p2[k,1]<- XC
+#    p2[k,2]<- YC
+#    p3[k]<- t2
+#    k<-k+1
+# }
+#vectorized version
+n  = rep(1:pLen3,each=pLen2)
+m  = rep(1:pLen2,pLen3)
+   XC=mx[m]
+   YC=my[n]
+   ZC=1-XC-YC
+if (is.function(conversionFunction)) {
+az<-conversionFunction(cbind(XC,YC,ZC))
+XC<-az[,1]
+YC<-az[,2]
+ZC=1-XC-YC
+}
+temp<-XYZtoRGB(mx[m],my[n],1-mx[m]-my[n])/255
+t1<-temp/apply(temp,1,max)*255
+t1<-round(t1)
+if (any(t1<0)) t1[which(t1<0)]<-1
+if (containedInTheHorseShoe) {
+t2<-apply(t1,1,function(x) sprintf("#%02X%02X%02X",x[1],x[2],x[3]))
+} else {
+boolInPolygon<-point.in.polygon(XC,YC,boundariesXY[,1],boundariesXY[,2])
+t2<-rep(NA,pLen2*pLen3)
+t2[which(boolInPolygon==1)]<-apply(t1[which(boolInPolygon==1),],1,function(x) sprintf("#%02X%02X%02X",x[1],x[2],x[3]))
+}
+p2<-cbind(XC,YC)
+p3<-t2
+if (!lNameDot) dots <- modifyList(dots, list(x=p2[,1],y=p2[,2],col=p3,type='p')) else dots <- modifyList(dots, list(x=p2[,1],y=p2[,2],col=p3))
+if (!(any(nameDots=='xlab'))) dots <- modifyList(dots, list(xlab='x'))
+if (!(any(nameDots=='ylab'))) dots <- modifyList(dots, list(ylab='y'))
+if (!(any(nameDots=='xlim'))) dots <- modifyList(dots, list(xlim=0:1))
+if (!(any(nameDots=='ylim'))) dots <- modifyList(dots, list(ylim=0:1))
+#if (!(any(nameDots=='col'))) dots <- modifyList(dots, list(col=p3))
+if (!(any(nameDots=='pch'))) dots <- modifyList(dots, list(pch=15))
+if (!(any(nameDots=='type'))) dots <- modifyList(dots, list(type='p'))
+do.call(plot, dots );par(new=TRUE)
+}
 
 
 
 
 
 
+
+LUV2LAB<-function(Luvmatrix) XYZ2Lab(Luv2XYZ(Luvmatrix))
+LAB2LUV<-function(Labmatrix) XYZ2Luv(Lab2XYZ(Labmatrix))
+XYZ2xyY <- function(XYZmatrix) {
+rSum<-apply(XYZmatrix,1,sum)
+cbind(XYZmatrix[,1]/ rSum ,XYZmatrix[,2]/ rSum,XYZmatrix[,3])
+}
+
+makeChromaticAdaptationMatrix<-function(ChromaticAdaptationAlgorithm='VonKries', illuminantSource='C', illuminantDestination='D65', observer=2, ChromaticAdaptationArray=colorscience::ChromaticAdaptation, referenceWhiteArray=colorscience::XYZperfectreflectingdiffuser)
+{# Chromatic Adaptation
+which(referenceWhiteArray[,"Illuminant"]==illuminantDestination)
+if (observer==2) observerPos<-2:4 else observerPos<-5:7
+coneResponseDomainSource<-ChromaticAdaptationArray[,,ChromaticAdaptationAlgorithm,'direct'] %*% 
+matrix(unlist(referenceWhiteArray[which(referenceWhiteArray[,"Illuminant"]==illuminantSource),observerPos]),3,1,byrow=TRUE)
+coneResponseDomainDestination<-ChromaticAdaptationArray[,,ChromaticAdaptationAlgorithm,'direct'] %*% 
+matrix(unlist(referenceWhiteArray[which(referenceWhiteArray[,"Illuminant"]==illuminantDestination),observerPos]),3,1,byrow=TRUE)
+d <- diag(3)
+diag(d) <- coneResponseDomainDestination/coneResponseDomainSource
+ChromaticAdaptationArray[,,ChromaticAdaptationAlgorithm,'inverse'] %*%  d   %*%  ChromaticAdaptationArray[,,ChromaticAdaptationAlgorithm,'direct'] #  adaptation matrix
+}
+
+footcandle2lux<-function(ftcl) ftcl * 10.7639104167
+# converts foot candle to Lumens/lux
+# http://www.translatorscafe.com/cafe/EN/units-converter/illumination
+footcandle2watt.sqcentimeter<-function(ftcl) ftcl*0.00000157597517082
+# converts foot candle to watts / square centimeter [w/cm^2] (at 555 nm) 
+# http://www.translatorscafe.com/cafe/EN/units-converter/illumination
+footcandle2candela.steradian.sqmeter<-function(ftcl) ftcl * 10763.9104167 
+# converts foot candle to candela steradian / square meter [cd*sr/m^2]
+# http://www.translatorscafe.com/cafe/EN/units-converter/illumination
 
 dkl2rgb <- function(dklMatrix, conversionMatrix=NA)
 { # Convert from DKL color space (Derrington, Krauskopf & Lennie) to RGB.
@@ -388,13 +864,13 @@ cbind(elevation,azimuth,radius)
 }
 
 #CIE 1976 Luv to u', v' CIE 1976
-Luv2Yuv<-function(Luvmatrix,illuminant='D65',observer=2,RefWhite=XYZperfectreflectingdiffuser) 
+Luv2Yuv<-function(Luvmatrix,illuminant='D65',observer=2,RefWhite=colorscience::XYZperfectreflectingdiffuser) 
 {
 if (!is.matrix(Luvmatrix)) Luvmatrix <- matrix(Luvmatrix, ncol=3,byrow=TRUE)
 XYZ2Yuv(Luv2XYZ(Luvmatrix,illuminant,observer,RefWhite))
 }
 #CIE u', v' CIE 1976 to CIE 1976 Luv
-Yuv2Luv<-function(Yu.v.matrix,illuminant='D65',observer=2,RefWhite=XYZperfectreflectingdiffuser) 
+Yuv2Luv<-function(Yu.v.matrix,illuminant='D65',observer=2,RefWhite=colorscience::XYZperfectreflectingdiffuser) 
 {
 if (!is.matrix(Yu.v.matrix)) Yu.v.matrix <- matrix(Yu.v.matrix, ncol=3,byrow=TRUE)
 XYZ2Luv(Yuv2XYZ(Yu.v.matrix),illuminant,observer,RefWhite)
@@ -470,7 +946,7 @@ cbind(x=3*uvMatrix[,1]/(2*uvMatrix[,1]-8*uvMatrix[,2]+4), y=2*uvMatrix[,2]/(2*uv
 }
 # CIE 1964 color space
 # source: CIE 1964 color space, From Wikipedia, the free encyclopedia http://en.wikipedia.org/wiki/CIE_1964_color_space
-CIE1960UCS2CIE1964<-function(uvYmatrix,illuminant='D65',observer=2,RefWhite=XYZperfectreflectingdiffuser) 
+CIE1960UCS2CIE1964<-function(uvYmatrix,illuminant='D65',observer=2,RefWhite=colorscience::XYZperfectreflectingdiffuser) 
 {
 if (is.null(dim(uvYmatrix))) if (length(uvYmatrix)>2) uvYmatrix<-matrix(uvYmatrix, ncol=3,byrow=TRUE)
 R<-RefWhite[which(RefWhite[["Illuminant"]]==illuminant ),]
@@ -488,9 +964,14 @@ V <- 13*uvYmatrix[,3]*(uvYmatrix[,2]-Ry)
 cbind(U=U,V=V ,W=W )
 }
 
-XYZ2BVR <-function(XYZmatrix){# matrix for XYZ to BVR transformation
+XYZ2BVR <-function(XYZmatrix){# matrix for XYZ to Landolt BVR transformation 
 if (is.null(dim(XYZmatrix))) if (length(XYZmatrix)>2) XYZmatrix<-matrix(XYZmatrix, ncol=3,byrow=TRUE)
 XYZmatrix %*% matrix(c(0.200308,-0.017427,0.012508,0.013093,0.789019,-0.328110,-0.224010,-0.465060,1.381969),3,3,byrow=TRUE)
+}
+
+BVR2XYZ <-function(BVRmatrix){# matrix for Landolt BVR to XYZ transformation 
+if (is.null(dim(BVRmatrix))) if (length(BVRmatrix)>2) BVRmatrix<-matrix(BVRmatrix, ncol=3,byrow=TRUE)
+BVRmatrix %*% matrix(c(4.961444,0.293121,0.902866, 0.096640,1.479324,0.513487,-0.021961,0.348571,0.837347),3,3,byrow=TRUE)
 }
 
 RGB2LEF<-function(RGBmatrix)
@@ -816,7 +1297,7 @@ Y <- ( CMYKmatrix[,3] * ( 1 - CMYKmatrix[,4] ) + CMYKmatrix[,4] )
 cbind(C=C,M=M,Y=Y)
 }
 
-XYZ2HunterLab<-function(XYZmatrix,illuminant='D65',observer=2,RefWhite=XYZperfectreflectingdiffuser)
+XYZ2HunterLab<-function(XYZmatrix,illuminant='D65',observer=2,RefWhite=colorscience::XYZperfectreflectingdiffuser)
 { # adapted from: easyrgb Color conversion math and formulas http://www.easyrgb.com/
 if (is.null(dim(XYZmatrix))) if (length(XYZmatrix)>2) XYZmatrix<-matrix(XYZmatrix, ncol=3,byrow=TRUE)
 R<-RefWhite[which(RefWhite[["Illuminant"]]==illuminant ),]
@@ -832,7 +1313,7 @@ b<-7 * ( ( yr - ( 0.847 * zr ) ) / L )
 cbind(L=L,a=a,b=b)
 }
 
-HunterLab2XYZ<-function(HunterLabmatrix,illuminant='D65',observer=2,RefWhite=XYZperfectreflectingdiffuser)
+HunterLab2XYZ<-function(HunterLabmatrix,illuminant='D65',observer=2,RefWhite=colorscience::XYZperfectreflectingdiffuser)
 { # adapted from: easyrgb Color conversion math and formulas http://www.easyrgb.com/
 if (is.null(dim(HunterLabmatrix))) if (length(HunterLabmatrix)>2) HunterLabmatrix<-matrix(HunterLabmatrix, ncol=3,byrow=TRUE)
 R<-RefWhite[which(RefWhite[["Illuminant"]]==illuminant ),]
@@ -871,7 +1352,7 @@ nmSeq<-seq(360,830,by=5)
 dWavelengthM <- nmSeq * 1.0e-3
 dWavelengthM5 <- dWavelengthM * dWavelengthM * dWavelengthM * dWavelengthM * dWavelengthM
 blackbody <- C1 / (dWavelengthM5 * 1.0e-12 * (exp(C2 / (CCTmatrix * dWavelengthM * 1.0e-3)) - 1.0))
-XYZmatrix<-blackbody * ciexyz31[nmSeq-359,c('xbar','ybar','zbar')]
+XYZmatrix<-blackbody * colorscience::ciexyz31[nmSeq-359,c('xbar','ybar','zbar')]
 XYZmatrix[,1]<-XYZmatrix[,1] / XYZmatrix[,2]
 XYZmatrix[,3]<-XYZmatrix[,3] / XYZmatrix[,2]
 XYZmatrix[,2]<-1.0
@@ -915,7 +1396,7 @@ LuvMatrix[,3]<-LCHuvmatrix[,2] * sin(LCHuvmatrix[,3] * pi / 180.0)
 LuvMatrix
 }
 
-DIN6167.YellownessIndex<-function(XYZmatrix,illuminant='C',observer=2,RefWhite=XYZperfectreflectingdiffuser) 
+DIN6167.YellownessIndex<-function(XYZmatrix,illuminant='C',observer=2,RefWhite=colorscience::XYZperfectreflectingdiffuser) 
 { # source: Basic equations for optical properties, 
 if (is.null(dim(XYZmatrix))) if (length(XYZmatrix)>2) XYZmatrix<-matrix(XYZmatrix, ncol=3,byrow=TRUE)
 RxRyRz<-XYZ2RxRyRz(XYZmatrix,illuminant,observer,RefWhite)
@@ -949,7 +1430,7 @@ if (is.null(dim(XYZmatrix))) if (length(XYZmatrix)>2) XYZmatrix<-matrix(XYZmatri
 3.388*XYZmatrix[,3]-3*XYZmatrix[,2]
 }
 
-CIE.Whiteness<-function(xyYmatrix,illuminant='D65',observer=2,RefWhite=XYZperfectreflectingdiffuser)
+CIE.Whiteness<-function(xyYmatrix,illuminant='D65',observer=2,RefWhite=colorscience::XYZperfectreflectingdiffuser)
 {# strictly for D65 and 2 or 10 deg observer
 #Values bigger than 100 indicate a bluish white
 #Values smaller than 100 indicate a yellowish white
@@ -964,7 +1445,7 @@ yr<-Rrgbwhitey / (Rrgbwhitex + Rrgbwhitey + Rrgbwhitez)
 xyYmatrix[,3]+800*(xr-xyYmatrix[,1])+1700*(yr-xyYmatrix[,2])
 }
 
-Berger59.Whiteness<-function(xyYmatrix,illuminant='C',observer=2,RefWhite=XYZperfectreflectingdiffuser)
+Berger59.Whiteness<-function(xyYmatrix,illuminant='C',observer=2,RefWhite=colorscience::XYZperfectreflectingdiffuser)
 {# Color iQC and Color iMatch Color Calculations Guide Version 8.0 July 2012
 if (is.null(dim(xyYmatrix))) if (length(xyYmatrix)>2) xyYmatrix<-matrix(xyYmatrix, ncol=3,byrow=TRUE)
 Rrgbwhitergb<-RefWhite[which(RefWhite[["Illuminant"]]==illuminant ),]
@@ -983,7 +1464,7 @@ LabHunterMatrix[,1]-3*LabHunterMatrix[,3]+3*LabHunterMatrix[,2]
 #L, a and b are Hunter Color Coordinates
 # Color iQC and Color iMatch Color Calculations Guide Version 8.0 July 2012
 
-Taube60.Whiteness<-function(XYZmatrix,illuminant='D65',observer=2,RefWhite=XYZperfectreflectingdiffuser)
+Taube60.Whiteness<-function(XYZmatrix,illuminant='D65',observer=2,RefWhite=colorscience::XYZperfectreflectingdiffuser)
 {# Color iQC and Color iMatch Color Calculations Guide Version 8.0 July 2012
 if (is.null(dim(XYZmatrix))) if (length(XYZmatrix)>2) XYZmatrix<-matrix(XYZmatrix, ncol=3,byrow=TRUE)
 Rrgbwhitergb<-RefWhite[which(RefWhite[["Illuminant"]]==illuminant ),]
@@ -1030,7 +1511,7 @@ Txy<-x[illuminant,observer,]
 Txy[1]*(Txy[2]-xymatrix[,1])-650*(Txy[3]-xymatrix[,2])
 }
 
-DominantWavelength<-function(xyYmatrix, illuminant='D65',observer=2,RefWhiteIllum=XYZperfectreflectingdiffuser)
+DominantWavelength<-function(xyYmatrix, illuminant='D65',observer=2,RefWhiteIllum=colorscience::XYZperfectreflectingdiffuser)
 {# Based on: Bruce Justin Lindbloom 2013 http:#www.brucelindbloom.com/index.html?ColorCalculator.html
 if (is.null(dim(xyYmatrix))) if (length(xyYmatrix)>2) xyYmatrix<-matrix(xyYmatrix, ncol=3,byrow=TRUE)
 Rrgbwhitergb<-RefWhiteIllum[which(RefWhiteIllum[["Illuminant"]]==illuminant ),]
@@ -1051,10 +1532,10 @@ for (nm in seq(360, 830, by=5))
 i1 <- (nm - 360) / 5
 i2 <- ifelse(nm == 830, 0, i1 + 1)
 nm2 <- 5 * i2 + 360
-x1 <- ciexyz31[i1*5 + 1,'xbar'] / (ciexyz31[i1*5 + 1,'xbar']+ciexyz31[i1*5 + 1,'ybar']+ciexyz31[i1*5 + 1,'zbar'])
-y1 <- ciexyz31[i1*5 + 1,'ybar'] / (ciexyz31[i1*5 + 1,'xbar']+ciexyz31[i1*5 + 1,'ybar']+ciexyz31[i1*5 + 1,'zbar'])
-x2 <- ciexyz31[i2*5 + 1,'xbar'] / (ciexyz31[i2*5 + 1,'xbar']+ciexyz31[i2*5 + 1,'ybar']+ciexyz31[i2*5 + 1,'zbar'])
-y2 <- ciexyz31[i2*5 + 1,'ybar'] / (ciexyz31[i2*5 + 1,'xbar']+ciexyz31[i2*5 + 1,'ybar']+ciexyz31[i2*5 + 1,'zbar'])
+x1 <- colorscience::ciexyz31[i1*5 + 1,'xbar'] / (colorscience::ciexyz31[i1*5 + 1,'xbar']+colorscience::ciexyz31[i1*5 + 1,'ybar']+colorscience::ciexyz31[i1*5 + 1,'zbar'])
+y1 <- colorscience::ciexyz31[i1*5 + 1,'ybar'] / (colorscience::ciexyz31[i1*5 + 1,'xbar']+colorscience::ciexyz31[i1*5 + 1,'ybar']+colorscience::ciexyz31[i1*5 + 1,'zbar'])
+x2 <- colorscience::ciexyz31[i2*5 + 1,'xbar'] / (colorscience::ciexyz31[i2*5 + 1,'xbar']+colorscience::ciexyz31[i2*5 + 1,'ybar']+colorscience::ciexyz31[i2*5 + 1,'zbar'])
+y2 <- colorscience::ciexyz31[i2*5 + 1,'ybar'] / (colorscience::ciexyz31[i2*5 + 1,'xbar']+colorscience::ciexyz31[i2*5 + 1,'ybar']+colorscience::ciexyz31[i2*5 + 1,'zbar'])
 C <- x1 - xr
 d <- y1 - yr
 E <- x2 - x1
@@ -1073,7 +1554,7 @@ ifelse(tArray[1] >= 0.0, wArray[1], wArray[2])
 dominantWavelength
 }
 
-XYZ2RGB<-function(XYZmatrix,illuminant='D65',observer=2,RefWhite=XYZperfectreflectingdiffuser,RGBModel='sRGB',RefWhiteRGB=whitepointsRGB,gamma=NA,RefWhiteIllum=XYZperfectreflectingdiffuser,CAT='Bradford',CATarray=ChromaticAdaptation) 
+XYZ2RGB<-function(XYZmatrix,illuminant='D65',observer=2,RefWhite=colorscience::XYZperfectreflectingdiffuser,RGBModel='sRGB',RefWhiteRGB=colorscience::whitepointsRGB,gamma=NA,RefWhiteIllum=colorscience::XYZperfectreflectingdiffuser,CAT='Bradford',CATarray=colorscience::ChromaticAdaptation) 
 {# Based on: Bruce Justin Lindbloom 2013 http:#www.brucelindbloom.com/index.html?ColorCalculator.html
 if (is.null(dim(XYZmatrix))) if (length(XYZmatrix)>2) XYZmatrix<-matrix(XYZmatrix, ncol=3,byrow=TRUE)
 CATmatrix<-CATarray[, , CAT, 'direct']
@@ -1111,8 +1592,8 @@ XYZ<-apply(xyz3,1:2,function(x) Compand(x, gamma))
 XYZ
 }
 
-RGB2XYZ<-function(RGBmatrix,illuminant='D65',observer=2,RefWhite=XYZperfectreflectingdiffuser,RGBModel='sRGB',RefWhiteRGB=whitepointsRGB,gamma=NA,
-RefWhiteIllum=XYZperfectreflectingdiffuser,CAT='Bradford',CATarray=ChromaticAdaptation)
+RGB2XYZ<-function(RGBmatrix,illuminant='D65',observer=2,RefWhite=colorscience::XYZperfectreflectingdiffuser,RGBModel='sRGB',RefWhiteRGB=colorscience::whitepointsRGB,gamma=NA,
+RefWhiteIllum=colorscience::XYZperfectreflectingdiffuser,CAT='Bradford',CATarray=colorscience::ChromaticAdaptation)
 {# Based on: Bruce Justin Lindbloom 2013 http:#www.brucelindbloom.com/index.html?ColorCalculator.html
 if (is.null(dim(RGBmatrix))) if (length(RGBmatrix)>2) RGBmatrix<-matrix(RGBmatrix, ncol=3,byrow=TRUE)
 CATmatrix<-CATarray[, , CAT, 'direct']
@@ -1198,7 +1679,8 @@ sqrt(CIELMatrix[,2]^2+CIELMatrix[,3]^2)
 CIE1976hueangle<-function(CIELMatrix){
 #  CIELab and CIELuv input
 if (is.null(dim(CIELMatrix))) if (length(CIELMatrix)>2) CIELMatrix<-matrix(CIELMatrix, ncol=3,byrow=TRUE)
-atan(CIELMatrix[,3]/CIELMatrix[,2])
+#atan(CIELMatrix[,3]/CIELMatrix[,2])*180/pi
+atan2(CIELMatrix[,3],CIELMatrix[,2])*180/pi
 }
 
 CIE1976uvSaturation<-function(uvMatrix, whitepoint){
@@ -1257,7 +1739,7 @@ if (dim(spectraIn)[2] != 2) stop('<<spectraIn>> must be a numeric array nx2')
 if (!is.numeric(spectraIn)) stop('<<spectraIn>> must be a numeric array nx2')
 if (any(is.na(wlIn))) wlIn<-c(min(spectraIn[,1]), max(spectraIn[,1]))
 if (any(is.na(wlInterval))) wlInterval<-spectraIn[2,1]-spectraIn[1,1]
-if (any(is.na(ciexyzIn))) ciexyzIn<-ciexyz31
+if (any(is.na(ciexyzIn))) ciexyzIn<-colorscience::ciexyz31
 wlMin<- min(wlIn)
 wlMax<- max(wlIn)
 wlSeq<-seq(wlMin,wlMax,wlInterval)
@@ -1300,10 +1782,10 @@ if (any(is.na(spectraIn))) stop('<<spectraIn>> must be a numeric array nx2')
 if (is.null(dim(spectraIn))) stop('<<spectraIn>> must be a numeric array nx2')
 if (dim(spectraIn)[2] != 2) stop('<<spectraIn>> must be a numeric array nx2')
 if (!is.numeric(spectraIn)) stop('<<spectraIn>> must be a numeric array nx2')
-if (is.na(wlIn)) wlIn<-c(min(spectraIn[,1]), max(spectraIn[,1]))
-if (is.na(wlInterval)) wlInterval<-spectraIn[2,1]-spectraIn[1,1]
-if (is.na(illuminantIn)) illuminantIn<-illuminantD65[which(illuminantD65[,1] %in% seq(min(illuminantD65[,1]), max(illuminantD65[,1]), wlInterval)),]
-if (is.na(ciexyzIn)) ciexyzIn<-ciexyz31
+if (any(is.na(wlIn))) wlIn<-c(min(spectraIn[,1]), max(spectraIn[,1]))
+if (any(is.na(wlInterval))) wlInterval<-spectraIn[2,1]-spectraIn[1,1]
+if (any(is.na(illuminantIn))) illuminantIn<-colorscience::illuminantD65[which(colorscience::illuminantD65[,1] %in% seq(min(colorscience::illuminantD65[,1]), max(colorscience::illuminantD65[,1]), wlInterval)),]
+if (any(is.na(ciexyzIn))) ciexyzIn<-colorscience::ciexyz31
 wlMin<- min(wlIn)
 wlMax<- max(wlIn)
 wlSeq<-seq(wlMin,wlMax,wlInterval)
@@ -1349,7 +1831,7 @@ zv<-zv/k
 c(xv,yv,zv)
 }
 
-createIsoTempLinesTable <- function(SPD=NA,CIETable = ciexyz31, TCS = TCSdata){
+createIsoTempLinesTable <- function(SPD=NA,CIETable = colorscience::ciexyz31, TCS = colorscience::TCSdata){
 # generate data for isotemperature lines needed for calculating correlated color temperature
 # Light source SPD
 # reference data values CIETable
@@ -1418,7 +1900,7 @@ cbind(T=TisotempLines, u=u, v=v, m=m) # isoTempLinesTable
 }
 
 
-spectra2CCT <- function(SPD=NA, isoTempLinesTable=NA,CIETable = ciexyz31, TCS = TCSdata){
+spectra2CCT <- function(SPD=NA, isoTempLinesTable=NA,CIETable = colorscience::ciexyz31, TCS = colorscience::TCSdata){
 # Correlated Color Temperature CCT
 if(any(is.na(isoTempLinesTable))) isoTempLinesTable=createIsoTempLinesTable(SPD)
 m <- isoTempLinesTable[,"m"]
@@ -1474,7 +1956,7 @@ if (index == 0) {
 }
 }
 
-spectra2CRIGAIFSCI <- function(SPD=NA, isoTempLinesTable=NA, CCT=NA, CIETable = ciexyz31, TCS = TCSdata){
+spectra2CRIGAIFSCI <- function(SPD=NA, isoTempLinesTable=NA, CCT=NA, CIETable = colorscience::ciexyz31, TCS = colorscience::TCSdata){
 # CRI, GAI and FSCI
 # Color Rendering Index CRI
 # Gamut Area Index GAI
@@ -1506,9 +1988,9 @@ if (CCT < 5000){
 } else {
     if (CCT <= 25000){
         #load('CIEDaySn','wavelength','S0','S1','S2');
-        S0 <- daylightcomponents[["S0"]]
-        S1 <- daylightcomponents[["S1"]]
-        S2 <- daylightcomponents[["S2"]]
+        S0 <- colorscience::daylightcomponents[["S0"]]
+        S1 <- colorscience::daylightcomponents[["S1"]]
+        S2 <- colorscience::daylightcomponents[["S2"]]
         if (CCT <= 7000){
             xd = -4.6070e9 / CCT^3 + 2.9678e6 / CCT^2 + 0.09911e3 / CCT + 0.244063
         } else {
@@ -1614,7 +2096,7 @@ Ra = sum(R[1:8])/8
 # fourth, calculate the gamut area formed by the 8 CIE standard color samples
 ukii=c(uki[1:8],uki[1])
 vkii=1.5*c(vki[1:8],vki[1])
-Ga=polyarea(ukii,vkii)
+Ga=pracma::polyarea(ukii,vkii)
 # Normalize gamut area to equal energy source 
 Ga=Ga/0.00728468*100
 #fprintf(1,'Gamut Area Index = %.1f\n',Ga)
@@ -1736,7 +2218,7 @@ sin((k * (Y ^ (1 / 3)) + 1)/ 180 * pi) + m / Y * sin((n * (Y - 2))/ 180 * pi) + 
 V
 }
 
-XYZ2Lab <- function(XYZmatrix,illuminant='D65',observer=2,RefWhite=XYZperfectreflectingdiffuser)
+XYZ2Lab <- function(XYZmatrix,illuminant='D65',observer=2,RefWhite=colorscience::XYZperfectreflectingdiffuser)
 {# Based on: Bruce Justin Lindbloom 2013 http:#www.brucelindbloom.com/index.html?ColorCalculator.html
 if (!is.matrix(XYZmatrix)) XYZmatrix<-matrix(XYZmatrix,ncol=3,byrow=TRUE)
 kE <- 216.0 / 24389.0
@@ -1745,9 +2227,9 @@ R<-RefWhite[which(RefWhite[["Illuminant"]]==illuminant ),]
 Rx<-unlist(R[paste('X',observer,sep='')])
 Ry<-unlist(R[paste('Y',observer,sep='')])
 Rz<-unlist(R[paste('Z',observer,sep='')])
-xr <- XYZmatrix[,1] / Rx * 100
-yr <- XYZmatrix[,2] / Ry * 100
-zr <- XYZmatrix[,3] / Rz * 100
+xr <- XYZmatrix[,1] / Rx #* 100
+yr <- XYZmatrix[,2] / Ry #* 100
+zr <- XYZmatrix[,3] / Rz #* 100
 fx <- ifelse((xr > kE) , (xr^(1.0 / 3.0)) , ((kK * xr + 16.0) / 116.0))
 fy <- ifelse((yr > kE) , (yr^(1.0 / 3.0)) , ((kK * yr + 16.0) / 116.0))
 fz <- ifelse((zr > kE) , (zr^(1.0 / 3.0)) , ((kK * zr + 16.0) / 116.0))
@@ -1757,7 +2239,7 @@ b <- 200.0 * (fy - fz)
 cbind(L=L,a=a,b=b)
 }
 
-XYZ2Luv <- function(XYZmatrix,illuminant='D65',observer=2,RefWhite=XYZperfectreflectingdiffuser)
+XYZ2Luv <- function(XYZmatrix,illuminant='D65',observer=2,RefWhite=colorscience::XYZperfectreflectingdiffuser)
 {# Based on: Bruce Justin Lindbloom 2013 http:#www.brucelindbloom.com/index.html?ColorCalculator.html
 if (!is.matrix(XYZmatrix)) XYZmatrix<-matrix(XYZmatrix,ncol=3,byrow=TRUE)
 kE <- 216.0 / 24389.0
@@ -1791,7 +2273,7 @@ colnames(XYZ)<-c('X','Y','Z')
 XYZ
 }
 
-XYZ2xyY<-function(XYZmatrix,illuminant='D65',observer=2,RefWhite=XYZperfectreflectingdiffuser)
+XYZ2xyY<-function(XYZmatrix,illuminant='D65',observer=2,RefWhite=colorscience::XYZperfectreflectingdiffuser)
 {# Based on: Bruce Justin Lindbloom 2013 http:#www.brucelindbloom.com/index.html?ColorCalculator.html
 if (!is.matrix(XYZmatrix)) XYZmatrix<-matrix(XYZmatrix,ncol=3,byrow=TRUE)
 Den <- rowSums(XYZmatrix)
@@ -1810,7 +2292,7 @@ xyYmatrix[-DenG0,2]<-y
 xyYmatrix
 }
 
-Lab2XYZ<-function(Labmatrix,illuminant='D65',observer=2,RefWhite=XYZperfectreflectingdiffuser)
+Lab2XYZ<-function(Labmatrix,illuminant='D65',observer=2,RefWhite=colorscience::XYZperfectreflectingdiffuser)
 {# Based on: Bruce Justin Lindbloom 2013 http:#www.brucelindbloom.com/index.html?ColorCalculator.html
 if (!is.matrix(Labmatrix)) Labmatrix<-matrix(Labmatrix,ncol=3,byrow=TRUE)
 L<-Labmatrix[,1]
@@ -1836,7 +2318,7 @@ Z <- zr * Rz
 cbind(X=X,Y=Y,Z=Z)
 }
 
-Luv2XYZ<-function(Luvmatrix,illuminant='D65',observer=2,RefWhite=XYZperfectreflectingdiffuser)
+Luv2XYZ<-function(Luvmatrix,illuminant='D65',observer=2,RefWhite=colorscience::XYZperfectreflectingdiffuser)
 {# Based on: Bruce Justin Lindbloom 2013 http:#www.brucelindbloom.com/index.html?ColorCalculator.html
 if (!is.matrix(Luvmatrix)) Luvmatrix<-matrix(Luvmatrix,ncol=3,byrow=TRUE)
 L<-Luvmatrix[,1]
@@ -2052,7 +2534,7 @@ m<-sapply(MunIn , function(x) {if (any(is.na(x))) return(NA) else {
 sidN<-gregexpr('^(\\d{1,2}\\.\\d{1,2}|\\d{1,2})(RP|YR|Y|GY|G|BG|B|PB|P|R)', x, perl=TRUE)
 h1<-substr(x,attr(sidN[[1]], "capture.start")[1,][1],attr(sidN[[1]], "capture.start")[1,][1]+attr(sidN[[1]], "capture.length")[1,][1]-1)
 hM<-substr(x,attr(sidN[[1]], "capture.start")[1,][2],attr(sidN[[1]], "capture.start")[1,][2]+attr(sidN[[1]], "capture.length")[1,][2]-1)
-h2<-which(hM == MunsellHues)
+h2<-which(hM == colorscience::MunsellHues)
 tmp <- (h2-1)*10+as.numeric(h1)
 if (tmp>=100) tmp<-tmp %% 100
 return(as.numeric(tmp))
@@ -2249,9 +2731,9 @@ yc <- A.y20*xc*xc*xc +A.y21*xc*xc +A.y22*xc +A.y23
 c(x=xc,y=yc)
 }
 
-wlnm2XYZ<-function(wavelength) c(approx(ciexyz31[,1],ciexyz31[,2],wavelength)$y,approx(ciexyz31[,1],ciexyz31[,3],wavelength)$y,approx(ciexyz31[,1],ciexyz31[,4],wavelength)$y)
+wlnm2XYZ<-function(wavelength) c(approx(colorscience::ciexyz31[,1],colorscience::ciexyz31[,2],wavelength)$y,approx(colorscience::ciexyz31[,1],colorscience::ciexyz31[,3],wavelength)$y,approx(colorscience::ciexyz31[,1],colorscience::ciexyz31[,4],wavelength)$y)
 
-wlnm2xyz<-function(wavelength) c(approx(cccie31[,1],cccie31[,2],wavelength)$y,approx(cccie31[,1],cccie31[,3],wavelength)$y,approx(cccie31[,1],cccie31[,4],wavelength)$y)
+wlnm2xyz<-function(wavelength) c(approx(colorscience::cccie31[,1],colorscience::cccie31[,2],wavelength)$y,approx(colorscience::cccie31[,1],colorscience::cccie31[,3],wavelength)$y,approx(colorscience::cccie31[,1],colorscience::cccie31[,4],wavelength)$y)
 
 emittanceblackbodyPlanck<-function(wlnm, T){
 # emittance of a black body of temperature T at a given wavelength (in metres)
@@ -2331,7 +2813,7 @@ p[i,f*(N-5)+1] <- r[N-2]
 p
 }
 
-spectra2ISObrightness<-function(spectraIn=NA, wlIn=NA, RSDmatrix=ISObrightnessReflectometerRSD){
+spectra2ISObrightness<-function(spectraIn=NA, wlIn=NA, RSDmatrix=colorscience::ISObrightnessReflectometerRSD){
 # Diffuse blue reflectance factor (ISO brightness), R457,  ISO 2470
 # ISO 2470-1 : 2009 PAPER, BOARD AND PULPS - MEASUREMENT OF DIFFUSE BLUE REFLECTANCE FACTOR, PART 1 INDOOR DAYLIGHT CONDITIONS (ISO BRIGHTNESS)
 #require(Hmisc)
@@ -2348,7 +2830,7 @@ xtrapolated[which(xtrapolated<0)]<-0
 sum(matrix(xtrapolated,ncol=1) * RSDmatrix[,2]) / sum(RSDmatrix[,2])
 }
 
-RxRyRz2XYZ<-function(RxRyRzmatrix=NA,illuminant='C', observer=2,RefWhite=XYZperfectreflectingdiffuser){
+RxRyRz2XYZ<-function(RxRyRzmatrix=NA,illuminant='C', observer=2,RefWhite=colorscience::XYZperfectreflectingdiffuser){
 # convert from three filter measurements (reflectance factors) to XYZ
 if (is.null(dim(RxRyRzmatrix))) if (length(RxRyRzmatrix)>2) RxRyRzmatrix<-matrix(RxRyRzmatrix, ncol=3,byrow=TRUE)
 R<-RefWhite[which(RefWhite[["Illuminant"]]==illuminant ),]
@@ -2360,7 +2842,7 @@ if (illuminant=='D65' & observer==10) return(cbind(X = 76.841 * RxRyRzmatrix[,1]
 stop('<<illuminant>> and <<observer>> must be C/2 or D65/10')
 }
 
-XYZ2RxRyRz<-function(XYZmatrix=NA,illuminant='C', observer=2,RefWhite=XYZperfectreflectingdiffuser){
+XYZ2RxRyRz<-function(XYZmatrix=NA,illuminant='C', observer=2,RefWhite=colorscience::XYZperfectreflectingdiffuser){
 # convert from XYZ to three filter measurements (reflectance factors)
 if (is.null(dim(XYZmatrix))) if (length(XYZmatrix)>2) XYZmatrix<-matrix(XYZmatrix, ncol=3,byrow=TRUE)
 R<-RefWhite[which(RefWhite[["Illuminant"]]==illuminant ),]

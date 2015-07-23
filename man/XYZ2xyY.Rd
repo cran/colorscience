@@ -3,7 +3,8 @@
 \title{convert from XYZ coordinates to xyY coordinates}
 \description{\code{XYZ2xyY} convert from XYZ coordinates to xyY coordinates.
 }
-\usage{XYZ2xyY(XYZmatrix,illuminant='D65',observer=2,RefWhite=XYZperfectreflectingdiffuser) }
+\usage{XYZ2xyY(XYZmatrix,illuminant='D65',observer=2,
+RefWhite=colorscience::XYZperfectreflectingdiffuser) }
 \arguments{
   \item{XYZmatrix}{ XYZ coordinates}
   \item{illuminant}{ illuminant}

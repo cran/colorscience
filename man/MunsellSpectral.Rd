@@ -32,8 +32,10 @@ Vol. 6, No. 2, February 1989, pp. 318-322.
 }
 \author{Jose Gama}
 \examples{
+\dontrun{
 data(MunsellSpectral)
 MunsellSpectral
+}
 }
 \keyword{datasets}
 

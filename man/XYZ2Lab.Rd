@@ -3,7 +3,8 @@
 \title{convert from XYZ coordinates to CIE Lab coordinates}
 \description{\code{XYZ2Lab} convert from XYZ coordinates to CIE Lab coordinates.
 }
-\usage{XYZ2Lab(XYZmatrix,illuminant='D65',observer=2,RefWhite=XYZperfectreflectingdiffuser) }
+\usage{XYZ2Lab(XYZmatrix,illuminant='D65',observer=2, 
+    RefWhite=colorscience::XYZperfectreflectingdiffuser) }
 \arguments{
   \item{XYZmatrix}{ XYZ coordinates}
   \item{illuminant}{ illuminant}

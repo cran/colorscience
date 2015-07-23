@@ -3,7 +3,8 @@
 \title{Convert CIE Luv coordinates to Yuv}
 \description{\code{Luv2Yuv} Converts CIE Luv coordinates to Yuv.
 }
-\usage{Luv2Yuv(Luvmatrix,illuminant='D65',observer=2,RefWhite=XYZperfectreflectingdiffuser) }
+\usage{Luv2Yuv(Luvmatrix,illuminant='D65',observer=2,RefWhite=
+colorscience::XYZperfectreflectingdiffuser) }
 \arguments{
   \item{Luvmatrix}{ CIE Luv coordinates}
   \item{illuminant}{ illuminant}

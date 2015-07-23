@@ -3,7 +3,8 @@
 \title{convert from XYZ coordinates to CIE Luv coordinates}
 \description{\code{XYZ2Luv} convert from XYZ coordinates to CIE Luv coordinates.
 }
-\usage{XYZ2Luv(XYZmatrix,illuminant='D65',observer=2,RefWhite=XYZperfectreflectingdiffuser) }
+\usage{XYZ2Luv(XYZmatrix,illuminant='D65',observer=2,
+RefWhite=colorscience::XYZperfectreflectingdiffuser) }
 \arguments{
   \item{XYZmatrix}{ XYZ coordinates}
   \item{illuminant}{ illuminant}

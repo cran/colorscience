@@ -15,21 +15,17 @@ sames as Graph-Based Visual Saliency.
 }
 \source{
 Package psychopy for Python
-\url{http://www.psychopy.org/epydoc/psychopy.misc-pysrc.html#dkl2rgb}
 
 Graph-Based Visual Saliency (MATLAB source code)
 Jonathan Harel
 California Institute of Technology
-\url{http://www.klab.caltech.edu/~harel/share/gbvs.php}
 }
 \references{
 Package psychopy for Python
-\url{http://www.psychopy.org/epydoc/psychopy.misc-pysrc.html#dkl2rgb}
 
 Graph-Based Visual Saliency (MATLAB source code)
 Jonathan Harel
 California Institute of Technology
-\url{http://www.klab.caltech.edu/~harel/share/gbvs.php}
 }
 \author{Jose Gama}
 \examples{

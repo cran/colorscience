@@ -5,7 +5,7 @@
 (reflectance factors) to XYZ.
 }
 \usage{RxRyRz2XYZ(RxRyRzmatrix=NA,illuminant='C', observer=2,
-RefWhite=XYZperfectreflectingdiffuser) }
+RefWhite=colorscience::XYZperfectreflectingdiffuser) }
 \arguments{
   \item{RxRyRzmatrix}{ reflectance factors coordinates}
   \item{illuminant}{ illuminant}

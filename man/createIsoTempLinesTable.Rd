@@ -5,7 +5,8 @@
 use with the Robertson Method (Robertson, 1968) to interpolate isotemperature 
 lines from the CIE 1960 UCS.
 }
-\usage{createIsoTempLinesTable(SPD=NA,CIETable = ciexyz31, TCS = TCSdata) }
+\usage{createIsoTempLinesTable(SPD=NA,CIETable = colorscience::ciexyz31, 
+TCS = colorscience::TCSdata) }
 \arguments{
   \item{SPD}{ light source spd}
   \item{CIETable}{ reference data values}

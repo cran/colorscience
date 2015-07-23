@@ -2,4 +2,7 @@ exportPattern("^[[:alpha:]]+")
 importFrom(Hmisc, approxExtrap)
 importFrom(munsellinterpol, MunsellHVC)
 importFrom(pracma, interp1, trapz, circshift)
-
+importFrom(sp, point.in.polygon)
+importFrom(stats, approx, approxfun)
+importFrom(graphics, par, plot, segments)
+importFrom(utils, modifyList)

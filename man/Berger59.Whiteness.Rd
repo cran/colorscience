@@ -5,7 +5,7 @@
 A. Berger (formerly employee of Bayer AG, Germany and was presented in 1959.
 }
 \usage{Berger59.Whiteness(xyYmatrix, illuminant = "C", observer = 2, RefWhite =
-                 XYZperfectreflectingdiffuser)}
+                 colorscience::XYZperfectreflectingdiffuser)}
 \arguments{
     \item{xyYmatrix}{ CIE values for illuminant C}
     \item{illuminant}{ illuminant}
