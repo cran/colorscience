@@ -1,4 +1,223 @@
 
+    
+    
+    
+#   MunsellSpecToHVC()
+#
+#   convert Munsell notation to numeric Hue,Value,Chroma
+#       Hue     is ASTM Hue in the interval (0,100]  (except Hue=0 for neutrals)
+#       Value   is in the interval [0,10]
+#       Chroma  is positive  (except Chroma=0 for neutrals)
+#
+#   arguments:
+#       MunsellSpecString   a character vector of length n
+#
+#   return value: an nx3 matrix with the computed HVCs placed in the rows
+#
+#   author:  Glenn Davis
+MunsellSpecToHVC <- function( MunsellSpecString )
+    {
+    if( ! is.character(MunsellSpecString) )
+        {
+        #   mess = "MunsellSpecToHVC().  MunsellSpecString is not a string.\n"
+        #   cat( mess )
+        return(NULL)
+        }
+
+    n = length(MunsellSpecString)
+    
+    out = matrix( as.numeric(NA), n, 3 )
+    colnames(out)   = c( "Hue", "Value", "Chroma" )
+    rownames(out)   = MunsellSpecString
+        
+    # Remove whitespace from input Munsell string
+    MunsellSpecString <- gsub( ' |\t', '', MunsellSpecString )
+    
+    # Make all letters in Munsell string upper case
+    MunsellSpecString <- toupper(MunsellSpecString)  
+
+    #-----   chromatic colors   ----------#
+    pattern = "^([0-9.]+)(R|YR|Y|GY|G|BG|B|PB|P|RP)([0-9.]+)/([0-9.]+)$" 
+
+    #   time_start  = as.double( Sys.time() )
+        
+    sub1234 = sub( pattern, "\\1 \\2 \\3 \\4", MunsellSpecString )
+    
+    mask    = (nchar(MunsellSpecString) < nchar(sub1234) )     # a matched string gets longer          #mask = grepl( pattern, MunsellSpecString )   #   ; print( mask )
+    
+    if( any(mask) )
+        {
+        #   make a little LUT
+        hue = seq( 0, 90, by=10 )
+        names(hue)  = c("R","YR","Y","GY","G","BG","B","PB","P","RP")
+        
+        sub1234    = sub1234[mask]        
+        
+        dat     = unlist( strsplit( sub1234, ' ', fixed=T ) ) #;  print( dat )
+        dat     = matrix( dat, length(sub1234), 4, byrow=T ) #;    print( dat )
+        
+        out[ mask, 1]   = hue[ dat[ ,2] ]  +  as.numeric(dat[ ,1])
+        out[ mask, 2]   = as.numeric( dat[ ,3] )
+        out[ mask, 3]   = as.numeric( dat[ ,4] )
+        }
+        
+    #   cat( "Elapsed: ", as.double( Sys.time() ) - time_start, '\n' )
+        
+    #------   achromatic colors     ----#
+    pattern = "^N([0-9.]+)(/|/0)?$"
+
+    sub1    = sub( pattern, "\\1", MunsellSpecString )
+        
+    mask    = (nchar(sub1) < nchar(MunsellSpecString) ) # a matched string gets shorter.    #mask = grepl( pattern, MunsellSpecString )   #   ; print( mask )
+ 
+    if( any(mask) )
+        {
+        out[ mask, 1]    = 0
+        out[ mask, 2]    = as.numeric( sub1[mask] )
+        out[ mask, 3]    = 0
+        }
+        
+    return( out )
+    }
+
+
+
+#   ColorBlockFromMunsell()
+#
+#   HVC        a numeric 3-vector, or an nx3 matrix
+#
+#   if HVC[] is a 3-vector
+#       HVC[1]     Munsell hue, on the ASTM D1535 100 point circular scale. All values are valid.
+#       HVC[2]     Munsell value, must be between 0 and 10
+#       HVC[3]     Munsell chroma, must be non-negative
+#
+#   if HVC[,] is an nx3 matrix
+#       each row is defined as above
+#
+#   return value:
+#       for a 3-vector:     list with: HVC, ISCC-NBS Number, ISCC-NBS Name
+#       for an nx3 matrix:  data.frame with columns: HVC, ISCC-NBS Number, ISCC-NBS Name
+#
+#   the function requires these global data.frames:
+#       SystemISCCNBS
+#       CentralsISCCNBS
+#
+#   author:  Glenn Davis
+ColorBlockFromMunsell  <-  function( HVC )
+    {    
+    if( ! is.numeric(HVC) )
+        {
+        #   mess = "ColorBlockFromMunsell().  HVC is not numeric.\n"
+        #   cat( mess )
+        return(NULL)
+        }
+
+    if( is.matrix(HVC) )
+        {
+        if( ncol(HVC) != 3 )
+            {
+            #   mess = "ColorBlockFromMunsell().  HVC does not have 3 columns.\n"
+            #   cat( mess )
+            return(NULL)
+            }        
+        
+        colnames(HVC)  = c( "H", "V", "C" )        
+        class(HVC)     = "model.matrix" 
+        
+        out = data.frame( HVC=HVC, Number=as.integer(NA), Name=as.character(NA), stringsAsFactors=FALSE )
+        
+        for( i in 1:nrow(out) )
+            {
+            result  = ColorBlockFromMunsell( HVC[i, ] )
+        
+            out$Number[i]   = result$Number
+            out$Name[i]     = result$Name
+            }
+        
+        return(out)
+        }
+    
+    if( length(HVC) != 3 )
+        {
+        #   mess = "ColorBlockFromMunsell().  length of HVC is not 3.\n"
+        #   cat( mess )
+        return(NULL)
+        }        
+        
+
+    if( is.null( names(HVC) ) )
+        names(HVC) = c( "Hue", "Value", "Chroma" )
+    
+    out = list( HVC=HVC, Number=as.integer(NA), Name=as.character(NA) )
+            
+    vmax    = 10            
+    valid   = all( is.finite(HVC) )  &&  (0 <= HVC[2])  &&  (HVC[2] <= vmax)  &&  (0 <= HVC[3])
+    
+    if( ! valid )   return( out )
+    
+    #   translate hue to the interval [1,101)   (101 is not included)
+    HVC[1] = ((HVC[1] - 1 ) %% 100) + 1
+        
+    if( HVC[2] == vmax )   HVC[2] = vmax - 1.e-6     # because upper comparison below is strict
+    
+    #   do 6-way comparison.  
+    #   Note upper comparisons are strict, and lower comparisons are not strict.
+    #   So a point on a boundary is in only 1 block.
+    mask.H  = colorscience::SystemISCCNBS$Hmin <= HVC[1]  &  HVC[1] < colorscience::SystemISCCNBS$Hmax
+    mask.V  = colorscience::SystemISCCNBS$Vmin <= HVC[2]  &  HVC[2] < colorscience::SystemISCCNBS$Vmax
+    mask.C  = colorscience::SystemISCCNBS$Cmin <= HVC[3]  &  HVC[3] < colorscience::SystemISCCNBS$Cmax
+        
+    theRow  = colorscience::SystemISCCNBS[ mask.H & mask.V & mask.C, ]
+    
+    if( nrow(theRow) != 1 )
+        {
+        #   mess = sprintf( "Expected exactly 1 match, but found %d\n", nrow(theRow) )
+        #   cat( mess )
+        return( out )
+        }
+        
+    out$Number  = theRow$Number
+    
+    out$Name    = colorscience::CentralsISCCNBS$Name[ out$Number ]
+    
+    return( out )
+    }
+
+#
+#   CheckColorLookup()
+#   performs lookup with colorBlockFromMunsell() and verifies that the color block number is correct
+#
+#   DataISCCNBS   data.frame with columns
+#       MunsellSpec     a string in Munsell notation
+#       Number          the correct ISCC-NBS Number
+#
+#   return value:  TRUE or FALSE
+#
+#   author:  Glenn Davis
+CheckColorLookup <- function( DataISCCNBS=colorscience::CentralsISCCNBS )
+    {
+    hvc = MunsellSpecToHVC( DataISCCNBS$MunsellSpec )
+    
+    block   = ColorBlockFromMunsell( hvc )  #;      print( v )
+    
+    #   compute errors
+    idx = which( block$Number != DataISCCNBS$Number )
+    
+    out = (length(idx) == 0)
+    
+    if( out )
+        cat( "There are no errors !\n" )
+    else
+        {
+        mess    = sprintf( "There are %d errors\n", length(idx) )
+        cat(mess)
+        df  = cbind( DataISCCNBS[ idx, ], NumberLookup=block$Number[idx] )
+        print( df )
+        }
+
+    return( out )
+    }
+
 # David H. Brainard
 # Cone Contrast and Opponent Modulation Color Spaces
 # pp. 563

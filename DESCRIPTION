@@ -1,7 +1,7 @@
 Package: colorscience
 Type: Package
 Title: Color Science Methods and Data
-Version: 1.0.1
+Version: 1.0.2
 Encoding: UTF-8
 Maintainer: Jose Gama <rxprtgama@gmail.com>
 Authors@R: c(person(given = "Jose", family = "Gama", role = c("aut","cre"),email = "rxprtgama@gmail.com"))
@@ -15,8 +15,8 @@ LazyData: yes
 Author: Jose Gama [aut, cre]
 Repository: CRAN
 Repository/R-Forge/Project: colorscience
-Repository/R-Forge/Revision: 9
-Repository/R-Forge/DateTimeStamp: 2015-07-23 07:02:23
-Date/Publication: 2015-07-23 11:35:01
+Repository/R-Forge/Revision: 10
+Repository/R-Forge/DateTimeStamp: 2016-02-28 00:35:14
+Date/Publication: 2016-02-28 12:43:24
 NeedsCompilation: no
-Packaged: 2015-07-23 07:26:22 UTC; rforge
+Packaged: 2016-02-28 00:45:15 UTC; rforge
