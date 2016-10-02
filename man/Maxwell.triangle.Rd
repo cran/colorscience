@@ -6,7 +6,7 @@
 \description{\code{Maxwell.triangle} Plots the Maxwell triangle, as a black 
 line, a color line or a polygon.
 }
-\usage{Maxwell.triangle(primariesRGB=colorscience::whitepointsRGB, 
+\usage{Maxwell.triangle(primariesRGB=get("whitepointsRGB", envir = environment()), 
 conversionFunction=NULL,...) }
 \arguments{
   \item{primariesRGB}{ primarie valuess for RGB color spaces}

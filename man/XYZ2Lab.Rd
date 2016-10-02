@@ -4,7 +4,7 @@
 \description{\code{XYZ2Lab} convert from XYZ coordinates to CIE Lab coordinates.
 }
 \usage{XYZ2Lab(XYZmatrix,illuminant='D65',observer=2, 
-    RefWhite=colorscience::XYZperfectreflectingdiffuser) }
+    RefWhite=get("XYZperfectreflectingdiffuser", envir = environment())) }
 \arguments{
   \item{XYZmatrix}{ XYZ coordinates}
   \item{illuminant}{ illuminant}

@@ -6,7 +6,7 @@ to numeric Hue,Value,Chroma.
 }
 \usage{MunsellSpecToHVC(MunsellSpecString) }
 \arguments{
-  \item{MunsellSpecString}{ string with the Munsell value and chroma.}
+  \item{MunsellSpecString}{ string with the Munsell hue, value and chroma.}
 }
 \value{
   numeric Hue,Value,Chroma

@@ -6,7 +6,7 @@ employee of BASF AG, Germany). It was presented in 1960 and has found it's
 application mainly in the plastic sector.
 }
 \usage{Taube60.Whiteness(XYZmatrix, illuminant = "D65", observer = 2, RefWhite
-                 = colorscience::XYZperfectreflectingdiffuser)}
+                 = get("XYZperfectreflectingdiffuser", envir = environment()))}
 \arguments{
     \item{XYZmatrix}{ CIE tristimulus values for illuminant C}
     \item{illuminant}{ illuminant}

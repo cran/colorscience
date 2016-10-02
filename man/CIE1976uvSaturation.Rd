@@ -23,8 +23,9 @@ John Wiley & Sons
 \author{Jose Gama}
 \examples{
 CIE1976uvSaturation(cbind(34.78467, 28.15159, 3.024663), as.numeric(
-XYZperfectreflectingdiffuser[which(XYZperfectreflectingdiffuser[["Illuminant"]]==
-'C'),c('X2','Y2')]))
+get("XYZperfectreflectingdiffuser", 
+envir = environment())[which(get("XYZperfectreflectingdiffuser", 
+envir = environment())[["Illuminant"]]=='C'),c('X2','Y2')]))
 }
 \keyword{datasets}
 

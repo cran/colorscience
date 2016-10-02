@@ -1,15 +1,14 @@
 \name{CheckColorLookup}
 \alias{CheckColorLookup}
-\title{convert Munsell notation to numeric HVC}
-\description{\code{CheckColorLookup} Converts convert Munsell notation 
-to numeric Hue,Value,Chroma.
+\title{Check that the color block number is correct}
+\description{\code{CheckColorLookup} Checks that the color block number is correct.
 }
 \usage{CheckColorLookup(DataISCCNBS) }
 \arguments{
   \item{DataISCCNBS}{ data.frame with columns MunsellSpec and Number}
 }
 \value{
-  numeric Hue,Value,Chroma
+  logic
 }
 \author{Glenn Davis}
 \keyword{datasets}

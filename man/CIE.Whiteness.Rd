@@ -5,7 +5,7 @@
 in the industry for D65 for 2 or 10 deg observer.
 }
 \usage{CIE.Whiteness(xyYmatrix, illuminant = "D65", observer = 2, RefWhite
-                 = colorscience::XYZperfectreflectingdiffuser)}
+                 = get("XYZperfectreflectingdiffuser", envir = environment()))}
 \arguments{
     \item{xyYmatrix}{ xyY data}
     \item{illuminant}{ illuminant}

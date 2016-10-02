@@ -4,7 +4,7 @@
 \description{\code{XYZ2xyY} convert from XYZ coordinates to xyY coordinates.
 }
 \usage{XYZ2xyY(XYZmatrix,illuminant='D65',observer=2,
-RefWhite=colorscience::XYZperfectreflectingdiffuser) }
+RefWhite=get("XYZperfectreflectingdiffuser", envir = environment())) }
 \arguments{
   \item{XYZmatrix}{ XYZ coordinates}
   \item{illuminant}{ illuminant}

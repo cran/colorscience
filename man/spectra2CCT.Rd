@@ -4,7 +4,8 @@
 \description{\code{spectra2CCT} Correlated Color Temperature (CCT) from spectra.
 }
 \usage{spectra2CCT(SPD=NA, isoTempLinesTable=NA,
-CIETable = colorscience::ciexyz31, TCS = colorscience::TCSdata) }
+CIETable = get("ciexyz31", envir = environment()), TCS = get("TCSdata", 
+envir = environment())) }
 \arguments{
   \item{SPD}{ light source spd}
   \item{isoTempLinesTable}{ Iso temperature lines table}

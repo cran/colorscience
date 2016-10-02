@@ -17,10 +17,13 @@
   }
 }
 \references{
-Kelly, Kenneth Low, 1910
-Central notations for the revised ISCC-NBS Color-Name Blocks 
-Journal of Research of the National Bureau of Standards
-Research Paper 2911, Vol. 61  No. 5, November 1958
+Color : Universal Language and Dictionary of Names
+ISCC-NBS Method of Designating Colors and a Dictionary of Color Names
+Kelly, Kenneth Low
+Judd, Deane Brewster
+NBS Special Publication 440
+December 1976
+Section 13: Color Name Charts, pp. 16-31
 }
 \author{Glenn Davis}
 \examples{

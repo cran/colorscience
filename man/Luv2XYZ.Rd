@@ -4,7 +4,7 @@
 \description{\code{Luv2XYZ} Converts CIE Luv coordinates to XYZ.
 }
 \usage{Luv2XYZ(Luvmatrix, illuminant = "D65", observer = 2, RefWhite
-                 = colorscience::XYZperfectreflectingdiffuser) }
+                 = get("XYZperfectreflectingdiffuser", envir = environment())) }
 \arguments{
   \item{Luvmatrix}{ Luv matrix}
   \item{illuminant}{ illuminant}

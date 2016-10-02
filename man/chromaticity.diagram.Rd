@@ -4,7 +4,7 @@
 \description{\code{chromaticity.diagram} Plots the chromaticity diagram AKA 
  "horse shoe".
 }
-\usage{chromaticity.diagram(chromaticityCoordinates=colorscience::cccie31, 
+\usage{chromaticity.diagram(chromaticityCoordinates=get("cccie31", envir = environment()), 
 conversionFunction=NULL,...) }
 \arguments{
   \item{chromaticityCoordinates}{ chromaticity coordinates}

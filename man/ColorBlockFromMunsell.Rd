@@ -1,8 +1,8 @@
 \name{ColorBlockFromMunsell}
 \alias{ColorBlockFromMunsell}
-\title{convert Munsell notation to numeric HVC}
-\description{\code{ColorBlockFromMunsell} Converts convert Munsell notation 
-to numeric Hue,Value,Chroma.
+\title{Get HVC, ISCC-NBS Number and ISCC-NBS Name from Munsell notation}
+\description{\code{ColorBlockFromMunsell} Get HVC, ISCC-NBS Number 
+and ISCC-NBS Name from Munsell notation.
 }
 \usage{ColorBlockFromMunsell(HVC) }
 \arguments{

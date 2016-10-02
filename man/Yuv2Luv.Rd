@@ -4,7 +4,7 @@
 \description{\code{Yuv2Luv} Converts Yuv coordinates to Luv.
 }
 \usage{Yuv2Luv(Yu.v.matrix, illuminant = "D65", observer = 2,
-                 RefWhite = colorscience::XYZperfectreflectingdiffuser) }
+                 RefWhite = get("XYZperfectreflectingdiffuser", envir = environment())) }
 \arguments{
   \item{Yu.v.matrix}{ Yuv matrix}
   \item{illuminant}{ illuminant}
