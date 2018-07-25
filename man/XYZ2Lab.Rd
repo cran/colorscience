@@ -25,7 +25,7 @@ Bruce Justin Lindbloom, 2014
 \author{Jose Gama}
 \examples{
 XYZ<-c(0.11465380, 0.08391198, 0.08222077)
-CIELMatrix<-xyz2lab(XYZ*100)
+CIELMatrix<-XYZ2Lab(XYZ*100)
 }
 \keyword{datasets}
 

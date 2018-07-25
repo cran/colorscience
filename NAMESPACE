@@ -1,6 +1,6 @@
 exportPattern("^[[:alpha:]]+")
 importFrom(Hmisc, approxExtrap)
-importFrom(munsellinterpol, MunsellHVC, xyz2srgb)
+# importFrom(munsellinterpol, MunsellHVC, xyz2srgb)
 importFrom(pracma, interp1, trapz, circshift, mrdivide, polyarea)
 importFrom(sp, point.in.polygon)
 importFrom(stats, approx, approxfun)

@@ -1,6 +1,8 @@
-293f8ea68940deac237b89a9988403fa *DESCRIPTION
-d402f0a46d5f4af1500c55914451df4a *NAMESPACE
+9dd90ea4d2531c6ce0b5710cc1fc04d3 *DESCRIPTION
+5be0b24fa25c693fbb8355ba5285168f *NAMESPACE
+e4c723f4d42ec975105a11d6e624a3aa *NEWS.md
 ef7b84005e456f6c1cdaa47e503d6e92 *R/colorscience.R
+bc44bcd22d609136c950b85f240e7d88 *R/munsellinterpol.R
 1bfeb14fc91c904570ac49f0ac5f4774 *data/CentralsISCCNBS.rda
 b484d845bdd30420c48e00329b8905cd *data/ChromaticAdaptation.rda
 1550281f238d51185023f3e548bc3ca4 *data/DeMarcoPokornySmith2degConeFundamentals1992.rda
@@ -125,7 +127,7 @@ cc21b33d15612101ecc8a982289f4be6 *man/RGB2XYZ.Rd
 ebf425b98d9592e1859a3966d4787d0f *man/RGB2YCbCr.Rd
 4ad0d68a1932ac7a6899d70803406658 *man/RGB2YIQ.Rd
 ce11ab57dfcd36753be5437cf9458ea3 *man/RGB2YPbPr.Rd
-4a57158b5f5a14e14d6ed021d1217e0f *man/RGB2YUV.Rd
+96a4b86c85f48a5670e7d8ee517bca52 *man/RGB2YUV.Rd
 ca93e1579dca4e0b6c8b54642eabe73d *man/RGB2hue.Rd
 a3c22f35cdc3d6abcff57d4757219925 *man/RxRyRz2XYZ.Rd
 c1afbf4e2df37c0c412c8bde4cf37fe0 *man/SmithPokorny2degConeFundamentals1975.Rd
@@ -146,8 +148,8 @@ e3a8fe3f2e81f81bc6324a45809a0664 *man/XYZ2BVR.Rd
 bf72cf3e2a0a67f5878e990ff6e944df *man/XYZ2CCT.Robertson.Rd
 d3dac0aab8e9613f1cfc092f65224806 *man/XYZ2HunterLab.Rd
 bc7227ae6ad300661709130fd0c4939e *man/XYZ2LMS.Rd
-184102d9156ae74201fd1fd7bedd31a9 *man/XYZ2Lab.Rd
-8ecef63135c7b0661ad0b048261cef7a *man/XYZ2Luv.Rd
+94d83e3ccd81fa7484d634f0884cdbbf *man/XYZ2Lab.Rd
+8ee45bf09f10af50514dbbe4a5582831 *man/XYZ2Luv.Rd
 f047902d2ea0bec82756297ac0edea56 *man/XYZ2RGB.Rd
 69b222f6b055b75080dcef50c2534c69 *man/XYZ2RxRyRz.Rd
 72e28f727723fc4bf409e16fcc0a9ab2 *man/XYZ2Yuv.Rd
@@ -161,8 +163,8 @@ a26f8ffdfbaad828f025942b2cd1f198 *man/Y2MunsellV.Rd
 f1dab4737a718f7be077931a45173ffa *man/YCbCr2RGB.Rd
 db4b81c6348677bac653fa71105d83ee *man/YIQ2RGB.Rd
 56b3e52126ab7e153a12bb8ab29f619a *man/YPbPr2RGB.Rd
-621b1d6efcdc6a6d992e5081d29f989d *man/YUV2RGB.Rd
-c1250f4d27857f4583ee09d35b23b43e *man/Yuv2Luv.Rd
+8bd47186ee111098615d3fe9a0691480 *man/YUV2RGB.Rd
+daea74abdad76505963bc0d0085d4b5e *man/Yuv2Luv.Rd
 16b6553e2d880d480af632c1ada08ff5 *man/Yuv2XYZ.Rd
 71d76547bccadfac44a22598eeb0447c *man/Yuv2xy.Rd
 dfb2807f4a70c1c409d9f0f8568e2702 *man/Yxy2CIE1960UCS.Rd
@@ -173,7 +175,7 @@ ab12d9babfc30200cf747080cdffb78a *man/cccie64.Rd
 4ac509f05ad7468c4942bb828e67b981 *man/chromaticity.diagram.color.Rd
 496b6ef46083a64ef0eed7a110626864 *man/ciexyz31.Rd
 a848d036d030da3fe66f987976706ac0 *man/ciexyz64.Rd
-151d41873b2177beed901a3ad4d68554 *man/colorscience-internal.Rd
+c7d146469437fd2c5e8559132299221f *man/colorscience-internal.Rd
 4ad5a9a350b59d6b3df671562ae082d6 *man/compuphaseDifferenceRGB.Rd
 2ad6f1c961290cae4e66297e6e8cd69c *man/conversionIlluminance.Rd
 115a5f6560a375240cac11f7d5e325fe *man/conversionLuminance.Rd

@@ -1,22 +1,22 @@
 Package: colorscience
 Type: Package
 Title: Color Science Methods and Data
-Version: 1.0.4
+Version: 1.0.5
 Encoding: UTF-8
-Maintainer: Jose Gama <rxprtgama@gmail.com>
-Authors@R: c(person(given = "Jose", family = "Gama", role = c("aut","cre"),email = "rxprtgama@gmail.com"))
+Date: 2018-07-25
+Maintainer: Glenn Davis <gdavis@gluonics.com>
+Authors@R: c(person(given = "Jose", family = "Gama", role = c("aut"),email = "rxprtgama@gmail.com"),
+        person(given = "Glenn", family = "Davis", role = c("aut","cre"), email = "gdavis@gluonics.com")  )
 Description: Methods and data for color science - color conversions by observer,
         illuminant and gamma. Color matching functions and chromaticity diagrams.
         Color indices, color differences and spectral data conversion/analysis.
 License: GPL (>= 3)
-Depends: R (>= 2.10), Hmisc, munsellinterpol, pracma, sp
+Depends: R (>= 2.10), Hmisc, pracma, sp
 Enhances: png
 LazyData: yes
-Author: Jose Gama [aut, cre]
+Author: Jose Gama [aut],
+  Glenn Davis [aut, cre]
 Repository: CRAN
-Repository/R-Forge/Project: colorscience
-Repository/R-Forge/Revision: 19
-Repository/R-Forge/DateTimeStamp: 2016-10-01 15:34:40
-Date/Publication: 2016-10-02 02:33:16
 NeedsCompilation: no
-Packaged: 2016-10-01 15:45:23 UTC; rforge
+Packaged: 2018-07-25 02:29:47 UTC; Glenn
+Date/Publication: 2018-07-25 07:20:12 UTC

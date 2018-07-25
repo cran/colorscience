@@ -14,16 +14,8 @@
 \value{
   Luv coordinates
 }
-\source{
-Madk, Sophie Kirschner, 2014
-Color space conversion 
-\url{http://www.blitzbasic.com/codearcs/codearcs.php?code=2953}
-}
-\references{
-Madk, Sophie Kirschner, 2014
-Color space conversion 
-\url{http://www.blitzbasic.com/codearcs/codearcs.php?code=2953}
-}
+
+
 \author{Jose Gama}
 \examples{
 Yuv <- c(0.08391198, 0.2830965, 0.4661789)
