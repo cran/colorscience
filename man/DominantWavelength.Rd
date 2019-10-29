@@ -1,7 +1,7 @@
 \name{DominantWavelength}
 \alias{DominantWavelength}
-\title{Convert CMY coordinates to CMYK}
-\description{\code{DominantWavelength} Converts CMY coordinates to CMYK.
+\title{Converts xyY coordinates to wavelength}
+\description{\code{DominantWavelength} Converts xyY coordinates to wavelength.
 }
 \usage{DominantWavelength(xyYmatrix, illuminant='D65',observer=2,
 RefWhiteIllum=get("XYZperfectreflectingdiffuser", envir = environment())) }
@@ -16,11 +16,11 @@ RefWhiteIllum=get("XYZperfectreflectingdiffuser", envir = environment())) }
 }
 \source{
 Bruce Justin Lindbloom, 2013 
-\url{www.brucelindbloom.com/index.html?ColorCalculator.html}
+\url{http://www.brucelindbloom.com/index.html?ColorCalculator.html}
 }
 \references{
 Bruce Justin Lindbloom, 2013 
-\url{www.brucelindbloom.com/index.html?ColorCalculator.html}
+\url{http://www.brucelindbloom.com/index.html?ColorCalculator.html}
 }
 \author{Jose Gama}
 \examples{

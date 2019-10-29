@@ -13,12 +13,12 @@
 \source{
 Takahiro Onodera, 2010
 Color-Model-Munsell-Util 
-\url{http://annocpan.org/dist/Color-Model-Munsell-Util}
+\code{http://annocpan.org/dist/Color-Model-Munsell-Util}
 }
 \references{
 Takahiro Onodera, 2010
 Color-Model-Munsell-Util 
-\url{http://annocpan.org/dist/Color-Model-Munsell-Util}
+\code{http://annocpan.org/dist/Color-Model-Munsell-Util}
 }
 \author{Jose Gama}
 \examples{

@@ -14,12 +14,12 @@ CIE tristimulus XYZ.
 \source{
 Bruce Justin Lindbloom, 2013 
 Color Calculator
-\url{www.brucelindbloom.com}
+\url{http://www.brucelindbloom.com/}
 }
 \references{
 Bruce Justin Lindbloom, 2013 
 Color Calculator
-\url{www.brucelindbloom.com}
+\url{http://www.brucelindbloom.com/}
 }
 \author{Jose Gama}
 \examples{

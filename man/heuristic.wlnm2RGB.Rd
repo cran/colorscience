@@ -5,26 +5,26 @@
 }
 \usage{heuristic.wlnm2RGB(wavelength, Gamma = 0.8, IntensityMax = 1) }
 \arguments{
-  \item{wavelength}{ wavelenght data}
+  \item{wavelength}{ wavelength data}
   \item{Gamma}{ Gamma}
   \item{IntensityMax}{ maximum intensity}
 }
 \value{
-  XYZ coordinates
+  RGB coordinates
 }
 \source{
 Dan Bruton's, 2004
-\url{www.physics.sfasu.edu/astro/color.html}
+\url{http://www.midnightkite.com/color.html}
 Earl F. Glynn 2006
 Delphi conversion
-\url{http://www.efg2.com/Lab/ScienceAndEngineering/Spectra.htm}
+\code{http://www.efg2.com/Lab/ScienceAndEngineering/Spectra.htm}
 }
 \references{
 Dan Bruton's, 2004
-\url{www.physics.sfasu.edu/astro/color.html}
+\url{http://www.midnightkite.com/color.html}
 Earl F. Glynn 2006
 Delphi conversion
-\url{http://www.efg2.com/Lab/ScienceAndEngineering/Spectra.htm}
+\code{http://www.efg2.com/Lab/ScienceAndEngineering/Spectra.htm}
 }
 \author{Jose Gama}
 \examples{
