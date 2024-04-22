@@ -13,11 +13,11 @@ coordinates.
 }
 \source{
 CIELAB to DIN99 coordinates, 2014
-\url{http://de.wikipedia.org/w/index.php?title=Diskussion:DIN99-Farbraum}
+\url{https://de.wikipedia.org/w/index.php?title=Diskussion:DIN99-Farbraum}
 }
 \references{
 CIELAB to DIN99 coordinates, 2014
-\url{http://de.wikipedia.org/w/index.php?title=Diskussion:DIN99-Farbraum}
+\url{https://de.wikipedia.org/w/index.php?title=Diskussion:DIN99-Farbraum}
 }
 \author{Jose Gama}
 \examples{

@@ -19,12 +19,12 @@ of standard illuminants.}
 \source{
 Wikipedia, 2014
 White points of standard illuminants
-\url{http://en.wikipedia.org/wiki/Standard_illuminant}
+\url{https://en.wikipedia.org/wiki/Standard_illuminant}
 }
 \references{
 Wikipedia, 2014
 White points of standard illuminants
-\url{http://en.wikipedia.org/wiki/Standard_illuminant}
+\url{https://en.wikipedia.org/wiki/Standard_illuminant}
 }
 \author{Jose Gama}
 \examples{

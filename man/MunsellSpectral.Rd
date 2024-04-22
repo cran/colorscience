@@ -11,7 +11,7 @@ Spectral Color Research group, 1989
 University of Kuopio, Finland
 School of Computing and the Department of Physics and Mathematics
 Database - Munsell Colors Matt (AOTF)
-\url{http://cs.joensuu.fi/~spectral/databases/download/munsell_aotf.htm}
+\url{https://sites.uef.fi/spectral/databases-software/munsell-colors-matt-aotf-measured/}
 
 Parkkinen, J. P. S., Hallikainen, J. and Jaaskelainen, 1989
 "Characteristic spectra of Munsell colors,"
@@ -23,7 +23,7 @@ Spectral Color Research group, 1989
 University of Kuopio, Finland
 School of Computing and the Department of Physics and Mathematics
 Database - Munsell Colors Matt (AOTF)
-\url{http://cs.joensuu.fi/~spectral/databases/download/munsell_aotf.htm}
+\url{https://sites.uef.fi/spectral/databases-software/munsell-colors-matt-aotf-measured/}
 
 Parkkinen, J. P. S., Hallikainen, J. and Jaaskelainen, 1989
 "Characteristic spectra of Munsell colors,"

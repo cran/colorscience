@@ -27,13 +27,13 @@
 Rensselaer Polytechnic Institute
 Light Sources and Color Q & A
 Appendix B: MATLAB script for calculating measures of light source color: CCT, CRI, GA, and FSI
-\url{http://www.lrc.rpi.edu/programs/nlpip/lightinganswers/lightsources/appendixb1.asp}
+\url{https://www.lrc.rpi.edu/programs/nlpip/lightinganswers/pdf/print/lightsources.pdf}
 }
 \references{
 Rensselaer Polytechnic Institute
 Light Sources and Color Q & A
 Appendix B: MATLAB script for calculating measures of light source color: CCT, CRI, GA, and FSI
-\url{http://www.lrc.rpi.edu/programs/nlpip/lightinganswers/lightsources/appendixb1.asp}
+\url{https://www.lrc.rpi.edu/programs/nlpip/lightinganswers/pdf/print/lightsources.pdf}
 }
 \author{Jose Gama}
 \examples{

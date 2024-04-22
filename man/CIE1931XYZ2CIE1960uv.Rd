@@ -14,12 +14,12 @@ to CIE 1960 uv color space.
 \source{
 Wikipedia, 2014
 CIE 1931 color space
-\url{http://en.wikipedia.org/wiki/CIE_1931_color_space#CIE_xy_chromaticity_diagram_and_the_CIE_xyY_color_space}
+\url{https://en.wikipedia.org/wiki/CIE_1931_color_space#CIE_xy_chromaticity_diagram_and_the_CIE_xyY_color_space}
 }
 \references{
 Wikipedia, 2014
 CIE 1931 color space
-\url{http://en.wikipedia.org/wiki/CIE_1931_color_space#CIE_xy_chromaticity_diagram_and_the_CIE_xyY_color_space}
+\url{https://en.wikipedia.org/wiki/CIE_1931_color_space#CIE_xy_chromaticity_diagram_and_the_CIE_xyY_color_space}
 }
 \author{Jose Gama}
 \examples{

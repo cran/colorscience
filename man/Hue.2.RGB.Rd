@@ -15,12 +15,12 @@
 \source{
 Paul Centore 2014
 The Munsell and Kubelka-Munk Toolbox
-\url{http://www.99main.com/~centore/MunsellAndKubelkaMunkToolbox/MunsellAndKubelkaMunkToolbox.html}
+\url{https://www.munsellcolourscienceforpainters.com/MunsellAndKubelkaMunkToolbox/MunsellAndKubelkaMunkToolbox.html}
 }
 \references{
 Paul Centore 2014
 The Munsell and Kubelka-Munk Toolbox
-\url{http://www.99main.com/~centore/MunsellAndKubelkaMunkToolbox/MunsellAndKubelkaMunkToolbox.html}
+\url{https://www.munsellcolourscienceforpainters.com/MunsellAndKubelkaMunkToolbox/MunsellAndKubelkaMunkToolbox.html}
 }
 \author{Jose Gama}
 \examples{

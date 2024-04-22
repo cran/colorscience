@@ -1,22 +1,22 @@
 Package: colorscience
 Type: Package
 Title: Color Science Methods and Data
-Version: 1.0.8
+Version: 1.0.9
 Encoding: UTF-8
-Date: 2019-10-29
+Date: 2024-04-22
 Maintainer: Glenn Davis <gdavis@gluonics.com>
 Authors@R: c(person(given = "Jose", family = "Gama", role = c("aut"),email = "rxprtgama@gmail.com"),
         person(given = "Glenn", family = "Davis", role = c("aut","cre"), email = "gdavis@gluonics.com")  )
 Description: Methods and data for color science - color conversions by observer,
         illuminant, and gamma. Color matching functions and chromaticity diagrams.
         Color indices, color differences, and spectral data conversion/analysis.
+        This package is deprecated and will someday be removed; for reasons and details please see the README file.
 License: GPL (>= 3)
 Depends: R (>= 2.10), Hmisc, pracma, sp
-Enhances: png
 LazyData: yes
 Author: Jose Gama [aut],
   Glenn Davis [aut, cre]
 Repository: CRAN
 NeedsCompilation: no
-Packaged: 2019-10-29 17:50:13 UTC; Glenn
-Date/Publication: 2019-10-29 18:40:02 UTC
+Packaged: 2024-04-22 02:00:59 UTC; Glenn
+Date/Publication: 2024-04-22 08:22:46 UTC

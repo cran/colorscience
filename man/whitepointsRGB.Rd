@@ -21,12 +21,12 @@ spaces.}
 \source{
 Wikipedia, 2014
 RGB color space
-\url{http://en.wikipedia.org/wiki/RGB_color_space}
+\url{https://en.wikipedia.org/wiki/RGB_color_space}
 }
 \references{
 Wikipedia, 2014
 RGB color space
-\url{http://en.wikipedia.org/wiki/RGB_color_space}
+\url{https://en.wikipedia.org/wiki/RGB_color_space}
 }
 \author{Jose Gama}
 \examples{

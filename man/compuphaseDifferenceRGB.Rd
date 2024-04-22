@@ -14,12 +14,12 @@
 \source{
 Thiadmer Riemersma, 2012
 CompuPhase
-\url{http://www.compuphase.com/cmetric.htm}
+\url{https://www.compuphase.com/cmetric.htm}
 }
 \references{
 Thiadmer Riemersma, 2012
 CompuPhase
-\url{http://www.compuphase.com/cmetric.htm}
+\url{https://www.compuphase.com/cmetric.htm}
 }
 \author{Jose Gama}
 \examples{

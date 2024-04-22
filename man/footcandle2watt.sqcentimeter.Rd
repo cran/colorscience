@@ -12,11 +12,11 @@
 }
 \source{
 Translators cafe
-\url{http://www.translatorscafe.com/cafe/EN/units-converter/illumination}
+\url{https://www.translatorscafe.com/unit-converter/en-US/illumination}
 }
 \references{
 Translators cafe
-\url{http://www.translatorscafe.com/cafe/EN/units-converter/illumination}
+\url{https://www.translatorscafe.com/unit-converter/en-US/illumination}
 }
 \author{Jose Gama}
 \examples{

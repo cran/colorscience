@@ -18,13 +18,13 @@ by Hernandez Andres.
 Hernandez-Andres, et al. 1999
 "Calculating correlated color temperatures across the entire gamut of daylight 
 and skylight chromaticities"
-\url{http://en.wikipedia.org/wiki/Color_temperature}
+\url{https://en.wikipedia.org/wiki/Color_temperature}
 }
 \references{
 Hernandez-Andres, et al. 1999
 "Calculating correlated color temperatures across the entire gamut of daylight 
 and skylight chromaticities"
-\url{http://en.wikipedia.org/wiki/Color_temperature}
+\url{https://en.wikipedia.org/wiki/Color_temperature}s
 }
 \author{Jose Gama}
 \examples{

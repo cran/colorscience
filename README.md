@@ -2,7 +2,7 @@
 
 ## WARNING
 
-This package will someday be removed.  
+This package is deprecated and will someday be removed.  
 I have long thought that it is too big and has some unimportant functions,
 so I have been copying the important parts to these packages:
 

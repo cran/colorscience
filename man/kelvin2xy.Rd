@@ -13,12 +13,12 @@
 \source{
 Kim et al., 2002
 "Design of Advanced Color - Temperature Control System for HDTV Applications" 
-\url{http://fcam.garage.maemo.org/apiDocs/namespace_f_cam.html}
+\url{https://www.jkps.or.kr/journal/view.html?uid=5163&vmd=Full}
 }
 \references{
 Kim et al., 2002
 "Design of Advanced Color - Temperature Control System for HDTV Applications" 
-\url{http://fcam.garage.maemo.org/apiDocs/namespace_f_cam.html}
+\url{https://www.jkps.or.kr/journal/view.html?uid=5163&vmd=Full}
 }
 \author{Jose Gama}
 \examples{

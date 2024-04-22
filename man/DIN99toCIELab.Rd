@@ -13,11 +13,11 @@ CIELAB color space.
 }
 \source{
 DIN99 coordinates to CIELAB color space
-\url{http://de.wikipedia.org/w/index.php?title=Diskussion:DIN99-Farbraum}
+\url{https://de.wikipedia.org/w/index.php?title=Diskussion:DIN99-Farbraum}
 }
 \references{
 DIN99 coordinates to CIELAB color space
-\url{http://de.wikipedia.org/w/index.php?title=Diskussion:DIN99-Farbraum}
+\url{https://de.wikipedia.org/w/index.php?title=Diskussion:DIN99-Farbraum}
 }
 \author{Jose Gama}
 \examples{
